@@ -26,3 +26,15 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
+
+/**
+ * Goes back to the previous page.
+ */
+function goBack() {
+    // If this is the first page.
+    if(history.length === 1){
+        window.location = "index.html"
+    } else {
+        history.back();
+    }
+}
