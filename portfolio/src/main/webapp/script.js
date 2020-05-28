@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+let old = -1;
+
 /**
  * Adds a random greeting to the page.
  */
@@ -28,13 +30,20 @@ function addRandomGreeting() {
 }
 
 /**
- * Adds a random fact.
+ * Adds a random fact to the page.
  */
 function addRandomFact() {
-    const facts = ["I have no sibling", "I seldom eat spicy food", "I don't like watching thrillers"];
+    const facts = ["I have no sibling", 
+                   "I seldom eat spicy food", 
+                   "I don't like watching thrillers"];
     
     // Pick a random fact.
-    const fact = facts[Math.floor(Math.random() * facts.length)];
+    let randomIndex = Math.floor(Math.random() * facts.length);
+    while (randomIndex == old) {
+        randomIndex = Math.floor(Math.random() * facts.length);
+    }
+    const fact = facts[randomIndex];
+    old = randomIndex;
 
     // Add it to the page.
     const factContainter = document.getElementById("fact-container");
