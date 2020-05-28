@@ -31,11 +31,10 @@ function addRandomGreeting() {
  * Goes back to the previous page.
  */
 function goBack() {
-    //if it was the first page
+    // If this is the first page.
     if(history.length === 1){
         window.location = "index.html"
     } else {
         history.back();
     }
-    // window.history.back();
 }
