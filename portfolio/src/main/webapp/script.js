@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-let old = -1;
-
 /**
  * Adds a random greeting to the page.
  */
@@ -35,17 +33,30 @@ function addRandomGreeting() {
 function addRandomFact() {
     const facts = ["I have no sibling", 
                    "I seldom eat spicy food", 
-                   "I don't like watching thrillers"];
-    
+                   "I don't like watching thrillers",
+                   "I love drinking milk tea"];
+
     // Pick a random fact.
-    let randomIndex = Math.floor(Math.random() * facts.length);
-    while (randomIndex == old) {
-        randomIndex = Math.floor(Math.random() * facts.length);
-    }
-    const fact = facts[randomIndex];
-    old = randomIndex;
+    const factContainer = document.getElementById("fact-container");
+    let currentFact = factContainer.innerText;
+    let fact = getRandomFact(facts, currentFact);
 
     // Add it to the page.
-    const factContainter = document.getElementById("fact-container");
-    factContainter.innerText = fact;
+    factContainer.innerText = fact;
+} 
+
+/**
+ * Picks a fun fact to be displayed.
+ * @param {string array} facts A list of facts.
+ * @param {string} currentFact Current fun fact.
+ * @return {string} Picked fun fact.
+ */
+function getRandomFact(facts, currentFact) {
+    let factIndex = Math.floor(Math.random() * facts.length)
+    let fact = facts[factIndex];
+    while (fact == currentFact) {
+        factIndex = (factIndex + Math.floor(Math.random() * facts.length)) % facts.length;
+        fact = facts[factIndex];
+    }
+    return fact;
 }
