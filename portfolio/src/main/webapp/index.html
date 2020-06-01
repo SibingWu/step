@@ -6,13 +6,15 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="getData()">
     <div id="content">
       <h1>My Portfolio</h1>
       <p>This is my portfolio.</p>
       <p>Click here to get a random message:</p>
       <button onclick="addRandomGreeting()">Hello</button>
       <div id="greeting-container"></div>
+
+      <p id="data"></p>
 
       <p style="align: middle">Click <a href="images.html">here</a> to see more pictures of Sibing!</p>
     </div>
