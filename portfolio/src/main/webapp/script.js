@@ -46,17 +46,22 @@ function addRandomFact() {
 } 
 
 /**
- * Picks a fun fact to be displayed.
+ * Picks a fun fact to be displayed that is different from the current fun fact.
  * @param {string array} facts A list of facts.
  * @param {string} currentFact Current fun fact.
  * @return {string} Picked fun fact.
  */
 function getRandomFact(facts, currentFact) {
-    let factIndex = Math.floor(Math.random() * facts.length)
-    let fact = facts[factIndex];
-    while (fact == currentFact) {
-        factIndex = (factIndex + Math.floor(Math.random() * facts.length)) % facts.length;
-        fact = facts[factIndex];
+    let newFactIndex = 0;
+    let currentIndex = facts.indexOf(currentFact);
+
+    if (currentIndex == -1) {
+        return facts[newFactIndex];
     }
+
+    newFactIndex = (currentIndex + Math.floor(Math.random() * (facts.length - 1) + 1)) % facts.length;
+
+    let fact = facts[newFactIndex];
+
     return fact;
 }
