@@ -38,10 +38,3 @@ function goBack() {
         history.back();
     }
 }
-
-/**
- * Adds a confirm box for sharing paragraphs.
- */
-function showConfirmnImage(image, sharing) {
-    confirm(sharing);
-}
