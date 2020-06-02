@@ -22,14 +22,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns some example content.*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private List<String> messages = new ArrayList<>(Arrays.asList("Brilliant!", "Pretty!", "Great!"));
+  private List<String> messages = Arrays.asList("Brilliant!", "Pretty!", "Great!");
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
