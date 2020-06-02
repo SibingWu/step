@@ -38,3 +38,12 @@ function goBack() {
         history.back();
     }
 }
+
+/**
+ * Fetches the response of "/data".
+ */
+function loadAndShowData() {
+    fetch("/data").then(response => response.text()).then((text) => {
+        document.getElementById("data").innerHTML = text;
+    });
+}
