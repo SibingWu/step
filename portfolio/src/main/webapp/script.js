@@ -43,7 +43,19 @@ function goBack() {
  * Fetches the response of "/data".
  */
 function loadAndShowData() {
-    fetch("/data").then(response => response.text()).then((text) => {
-        document.getElementById("data").innerHTML = text;
+    fetch("/data").then(response => response.json()).then((json) => {
+        const div = document.getElementById("comments");
+        div.innerHTML = "";
+
+        for (let i = 0; i < json.length; i++) {
+            div.appendChild(createListElement(json[i]));
+        }
     });
+}
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
 }
