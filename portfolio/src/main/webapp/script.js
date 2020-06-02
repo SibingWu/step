@@ -52,6 +52,10 @@ function addRandomFact() {
  * @return {string} Picked fun fact.
  */
 function getRandomFact(facts, currentFact) {
+    if (facts == null || facts.length <= 0) {
+        return "No fact sorry:(";
+    }
+
     let newFactIndex = 0;
     let currentIndex = facts.indexOf(currentFact);
 
