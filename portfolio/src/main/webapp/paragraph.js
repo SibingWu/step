@@ -6,11 +6,9 @@ function addDescription(directory) {
 
     generateDiv("content");
 
-    let count = 1;
-    for (const [imagePath, description] of Object.entries(imagePathDescriptionMap)) {
-        generateHTMLLayout(imagePath, description, count, "description");
-        count++;
-    };
+    Object.entries(imagePathDescriptionMap).forEach(
+        ([image, description], index) => generateHTMLLayout(image, description, index + 1, "description")
+    );
 }
 
 /**
@@ -47,15 +45,15 @@ function generateDiv(elementId) {
  * Generates the layout in the html.
  * @param {string} image path to the image.
  * @param {string} description description to the image.
- * @param {number} i paragraph id.
+ * @param {number} paragraphId paragraph id.
  * @param {string} elementId id of the element where the paragraphs place.
  */
-function generateHTMLLayout(image, description, i, elementId) {
+function generateHTMLLayout(image, description, paragraphId, elementId) {
     let tag = document.createElement("a");
     let source = document.createAttribute("href");
     source.value = image; 
     tag.setAttributeNode(source);
-    tag.innerHTML = "<h3>P" + i + "</h3>";
+    tag.innerHTML = "<h3>P" + paragraphId + "</h3>";
 
     let descriptionText = document.createElement("p");
     let text = document.createTextNode(description);
