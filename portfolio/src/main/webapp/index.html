@@ -46,11 +46,14 @@
       <p style="align: middle">Click <a href="images.html">here</a> to see more pictures of Sibing!</p>
       <p style="align: middle">Click <a href="blog.html">here</a> to see more hidden hobbies of Sibing!</p>
 
-      <form action="/data" target="_blank">
-        <label for="comment">Leave Your Comment Below</label><br>
-        <input type="text" id="comment" name="comment" value="No comments">
-        <input type="submit"  value="Submit Your Comment">
-      </form>>
+      <form action="/data" method="post">
+        <label>Leave Your Comment Below</label><br>
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name"><br>
+        <label for="comment">Comment</label><br>
+        <input type="text" id="comment" name="comment" size="50"><br>
+        <input type="submit" value="Submit Your Comment">
+      </form>
 
       <button onclick="loadAndShowData()">Show Comments</button>
       <div id="comments"></div>
