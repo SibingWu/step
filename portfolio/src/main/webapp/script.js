@@ -68,7 +68,9 @@ function getRandomFact(facts, currentFact) {
     let fact = facts[newFactIndex];
 
     return fact;
+}
 
+/**
  * Goes back to the previous page.
  */
 function goBack() {
