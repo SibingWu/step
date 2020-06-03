@@ -28,6 +28,47 @@ function addRandomGreeting() {
 }
 
 /**
+ * Adds a random fact to the page.
+ */
+function addRandomFact() {
+    const facts = ["I have no sibling", 
+                   "I seldom eat spicy food", 
+                   "I don't like watching thrillers",
+                   "I love drinking milk tea"];
+
+    // Pick a random fact.
+    const factContainer = document.getElementById("fact-container");
+    let currentFact = factContainer.innerText;
+    let fact = getRandomFact(facts, currentFact);
+
+    // Add it to the page.
+    factContainer.innerText = fact;
+} 
+
+/**
+ * Picks a fun fact to be displayed that is different from the current fun fact.
+ * @param {string array} facts A list of facts.
+ * @param {string} currentFact Current fun fact.
+ * @return {string} Picked fun fact.
+ */
+function getRandomFact(facts, currentFact) {
+    if (facts == null || facts.length <= 0) {
+        return "No fact sorry:(";
+    }
+
+    let newFactIndex = 0;
+    let currentIndex = facts.indexOf(currentFact);
+
+    if (currentIndex == -1) {
+        return facts[newFactIndex];
+    }
+
+    newFactIndex = (currentIndex + Math.floor(Math.random() * (facts.length - 1) + 1)) % facts.length;
+
+    let fact = facts[newFactIndex];
+
+    return fact;
+
  * Goes back to the previous page.
  */
 function goBack() {
