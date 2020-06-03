@@ -16,6 +16,7 @@ package com.google.sps.servlets;
 
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
+import sun.tools.jconsole.JConsole;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Servlet that returns some example content.*/
-@WebServlet("/com/google/sps/data")
+@WebServlet("/data")
 public class DataServlet extends HttpServlet {
   private List<Comment> comments;
 
@@ -57,11 +58,11 @@ public class DataServlet extends HttpServlet {
     // Get comments from the form
     String name = getParameter(request, "name", "");
     String comment = getParameter(request, "comment", "No comments");
-    comments.add(new Comment(name, comment, LocalDateTime.now()));
 
     // Respond with the result.
-    response.setContentType("text/html;");
-    response.getWriter().println(comments.toString());
+    comments.add(new Comment(name, comment, LocalDateTime.now()));
+
+    // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
   }
 

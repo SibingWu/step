@@ -91,7 +91,8 @@ function loadAndShowData() {
         div.innerHTML = "";
 
         for (let i = 0; i < json.length; i++) {
-            div.appendChild(createListElement(json[i]));
+            let commentString = formatComment(json[i]);
+            div.appendChild(createListElement(commentString));
         }
     });
 }
@@ -101,4 +102,28 @@ function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
+}
+
+/**
+ * Formats the comment json.
+ * @param {json} json Comment object in json form.
+ * @return {string} A formatted string.
+ */
+function formatComment(json) {
+    let name = json.name;
+    let comment = json.comment;
+
+    let year = json.time.date.year;
+    let month = json.time.date.month;
+    let day = json.time.date.day;
+
+    let hour = json.time.time.hour;
+    let minute = json.time.time.minute;
+    let second = json.time.time.second;
+
+    let jsonString = "Name: " + name + "\n"
+                   + "Time: " + year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second + "\n"
+                   + "Comment: " + comment;
+    console.log(jsonString);
+    return jsonString;
 }
