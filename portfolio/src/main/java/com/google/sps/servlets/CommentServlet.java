@@ -14,15 +14,18 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
-import sun.tools.jconsole.JConsole;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -31,20 +34,20 @@ import java.util.List;
 /** Servlet that returns some example content.*/
 @WebServlet("/comment")
 public class CommentServlet extends HttpServlet {
-  private List<Comment> comments;
-
-  @Override
-  public void init() {
-    comments = new ArrayList<>();
-  }
+//  private List<Comment> comments;
+//
+//  @Override
+//  public void init() {
+//    comments = new ArrayList<>();
+//  }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String json = convertToJsonUsingGson(this.comments);
+    // String json = convertToJsonUsingGson(this.comments);
 
     // Send the JSON as the response
-    response.setContentType("application/json;");
-    response.getWriter().println(json);
+//    response.setContentType("application/json;");
+//    response.getWriter().println(json);
   }
 
   private String convertToJsonUsingGson(List<Comment> comments) {
@@ -60,7 +63,14 @@ public class CommentServlet extends HttpServlet {
     String comment = getParameter(request, "comment", "No comments");
 
     // Respond with the result.
-    comments.add(new Comment(name, comment, LocalDateTime.now()));
+//    comments.add(new Comment(name, comment, LocalDateTime.now()));
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("name", name);
+    commentEntity.setProperty("comment", comment);
+    commentEntity.setProperty("time", LocalDateTime.now());
+
+    DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+    datastoreService.put(commentEntity);
 
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
