@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +37,7 @@ public final class CommentServlet extends HttpServlet {
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-     String json = convertToJsonUsingGson(this.comments);
+    String json = convertToJsonUsingGson(this.comments);
 
     // Send the JSON as the response
     response.setContentType("application/json;");
@@ -54,18 +53,18 @@ public final class CommentServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get comments from the form
-    String name = getParameter(request, /*name=*/"name", /*defaultValue=*/"");
-    String comment = getParameter(request, /*name=*/"comment", /*defaultValue=*/"No comments");
+    String commenter = getParameter(request, /*name=*/"commenter", /*defaultValue=*/"");
+    String content = getParameter(request, /*name=*/"content", /*defaultValue=*/"No comments");
     long timestamp = System.currentTimeMillis();
     // TODO: validate request parameters
 
     // Modify the state of server.
-    addComment(name, comment);
+    addComment(commenter, content);
 
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("name", name);
-    commentEntity.setProperty("comment", comment);
-    commentEntity.setProperty("time", timestamp);
+    commentEntity.setProperty("commenter", commenter);
+    commentEntity.setProperty("content", content);
+    commentEntity.setProperty("timestamp", timestamp);
 
     DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
     datastoreService.put(commentEntity);
