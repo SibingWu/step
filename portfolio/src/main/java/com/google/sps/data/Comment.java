@@ -4,22 +4,22 @@ import java.time.LocalDateTime;
 
 /** Represents a comment with related details. */
 public final class Comment {
-    private final String name;
-    private final String comment;
+    private final String commenter;
+    private final String content;
     private final LocalDateTime time;
 
-    public Comment(String name, String comment, LocalDateTime time) {
-        this.name = name;
-        this.comment = comment;
+    public Comment(String commenter, String content, LocalDateTime time) {
+        this.commenter = commenter;
+        this.content = content;
         this.time = time;
     }
 
-    public String getName() {
-        return name;
+    public String getCommenter() {
+        return commenter;
     }
 
-    public String getComment() {
-        return comment;
+    public String getContent() {
+        return content;
     }
 
     public LocalDateTime getTime() {
