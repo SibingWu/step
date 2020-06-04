@@ -34,20 +34,20 @@ import java.util.List;
 /** Servlet that returns some example content.*/
 @WebServlet("/comment")
 public class CommentServlet extends HttpServlet {
-//  private List<Comment> comments;
-//
-//  @Override
-//  public void init() {
-//    comments = new ArrayList<>();
-//  }
+  private List<Comment> comments;
+
+  @Override
+  public void init() {
+    comments = new ArrayList<>();
+  }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // String json = convertToJsonUsingGson(this.comments);
+     String json = convertToJsonUsingGson(this.comments);
 
     // Send the JSON as the response
-//    response.setContentType("application/json;");
-//    response.getWriter().println(json);
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
   }
 
   private String convertToJsonUsingGson(List<Comment> comments) {
@@ -64,7 +64,8 @@ public class CommentServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
 
     // Respond with the result.
-//    comments.add(new Comment(name, comment, LocalDateTime.now()));
+    comments.add(new Comment(name, comment, LocalDateTime.now()));
+
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("name", name);
     commentEntity.setProperty("comment", comment);
