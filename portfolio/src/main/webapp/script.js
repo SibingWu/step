@@ -86,7 +86,7 @@ function goBack() {
  * Fetches the response of "/data".
  */
 function loadAndShowData() {
-    fetch("/data").then(response => response.json()).then((json) => {
+    fetch("/comment").then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
@@ -121,10 +121,7 @@ function formatComment(json) {
     let minute = json.time.time.minute;
     let second = json.time.time.second;
 
-//    let jsonString = "Name: " + name + "\n"
-//                   + "Time: " + year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second + "\n"
-//                   + "Comment: " + comment;
-    let jsonString = "Name: ${name}\nTime: ${year}/${month}/${day} ${hour}:${minute}:${second}\nComment: ${comment}";
+    let jsonString = `Name: ${name}\nTime: ${year}/${month}/${day} ${hour}:${minute}:${second}\nComment: ${comment}`;
 
     return jsonString;
 }
