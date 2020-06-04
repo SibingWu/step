@@ -71,7 +71,7 @@ public final class CommentServlet extends HttpServlet {
   /** Converts the long timestamp into LocalDateTime form */
   private LocalDateTime convertTimestampToLocalDateTime(long timestamp) {
     LocalDateTime time =
-            LocalDateTime.ofInstant(Instant.ofEpochSecond(timestamp),
+            LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp),
                     TimeZone.getDefault().toZoneId());
     return time;
   }

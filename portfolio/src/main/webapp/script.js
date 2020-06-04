@@ -87,7 +87,6 @@ function goBack() {
  */
 function loadAndShowData() {
     fetch("/comment").then(response => response.json()).then((json) => {
-        console.log(json);
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
