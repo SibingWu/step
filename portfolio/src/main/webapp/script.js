@@ -91,7 +91,7 @@ function loadAndShowData() {
         div.innerHTML = "";
 
         for (let i = 0; i < json.length; i++) {
-            let commentString = formatComment(json[i]);
+            let commentString = getFormattedComment(json[i]);
             div.appendChild(createListElement(commentString));
         }
     });
@@ -105,11 +105,11 @@ function createListElement(text) {
 }
 
 /**
- * Formats the comment json.
+ * Get a human readable string from a comment json.
  * @param {json} json Comment object in json form.
  * @return {string} A formatted string.
  */
-function formatComment(json) {
+function getFormattedComment(json) {
     let name = json.name;
     let comment = json.comment;
 
@@ -121,7 +121,7 @@ function formatComment(json) {
     let minute = json.time.time.minute;
     let second = json.time.time.second;
 
-    let jsonString = `Name: ${name}\nTime: ${year}/${month}/${day} ${hour}:${minute}:${second}\nComment: ${comment}`;
+    let resultString = `Name: ${name}\nTime: ${year}/${month}/${day} ${hour}:${minute}:${second}\nComment: ${comment}`;
 
-    return jsonString;
+    return resultString;
 }
