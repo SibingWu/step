@@ -61,13 +61,14 @@ public class CommentServlet extends HttpServlet {
     // Get comments from the form
     String name = getParameter(request, "name", "");
     String comment = getParameter(request, "comment", "No comments");
+    long timestamp = System.currentTimeMillis();
 
     // Respond with the result.
 //    comments.add(new Comment(name, comment, LocalDateTime.now()));
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("name", name);
     commentEntity.setProperty("comment", comment);
-    commentEntity.setProperty("time", LocalDateTime.now());
+    commentEntity.setProperty("time", timestamp);
 
     DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
     datastoreService.put(commentEntity);
