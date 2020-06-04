@@ -30,12 +30,7 @@ import java.util.List;
 /** Servlet that handles getting and posting comment content. */
 @WebServlet("/comment")
 public final class CommentServlet extends HttpServlet {
-  private List<Comment> comments;
-
-  @Override
-  public void init() {
-    comments = new ArrayList<>();
-  }
+  private final List<Comment> comments = new ArrayList<>();
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
