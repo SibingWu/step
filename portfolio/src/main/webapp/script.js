@@ -121,9 +121,10 @@ function formatComment(json) {
     let minute = json.time.time.minute;
     let second = json.time.time.second;
 
-    let jsonString = "Name: " + name + "\n"
-                   + "Time: " + year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second + "\n"
-                   + "Comment: " + comment;
-    console.log(jsonString);
+//    let jsonString = "Name: " + name + "\n"
+//                   + "Time: " + year + "/" + month + "/" + day + " " + hour + ":" + minute + ":" + second + "\n"
+//                   + "Comment: " + comment;
+    let jsonString = "Name: ${name}\nTime: ${year}/${month}/${day} ${hour}:${minute}:${second}\nComment: ${comment}";
+
     return jsonString;
 }

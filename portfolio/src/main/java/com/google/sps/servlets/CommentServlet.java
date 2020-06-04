@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /** Servlet that returns some example content.*/
-@WebServlet("/data")
-public class DataServlet extends HttpServlet {
+@WebServlet("/comment")
+public class CommentServlet extends HttpServlet {
   private List<Comment> comments;
 
   @Override
@@ -67,8 +67,7 @@ public class DataServlet extends HttpServlet {
   }
 
   /**
-   * @return the request parameter, or the default value if the parameter
-   *         was not specified by the client
+   * @return the request parameter, or the default value if the parameter was not specified by the client.
    */
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
