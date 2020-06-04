@@ -86,12 +86,13 @@ function goBack() {
  * Fetches the response of "/data".
  */
 function loadAndShowData() {
-    fetch("/data").then(response => response.json()).then((json) => {
+    fetch("/comment").then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
         for (let i = 0; i < json.length; i++) {
-            div.appendChild(createListElement(json[i]));
+            let commentString = getFormattedComment(json[i]);
+            div.appendChild(createListElement(commentString));
         }
     });
 }
@@ -101,4 +102,26 @@ function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
+}
+
+/**
+ * Get a human readable string from a comment json.
+ * @param {json} json Comment object in json form.
+ * @return {string} A formatted string.
+ */
+function getFormattedComment(json) {
+    let name = json.name;
+    let comment = json.comment;
+
+    let year = json.time.date.year;
+    let month = json.time.date.month;
+    let day = json.time.date.day;
+
+    let hour = json.time.time.hour;
+    let minute = json.time.time.minute;
+    let second = json.time.time.second;
+
+    let resultString = `Name: ${name}\nTime: ${year}/${month}/${day} ${hour}:${minute}:${second}\nComment: ${comment}`;
+
+    return resultString;
 }
