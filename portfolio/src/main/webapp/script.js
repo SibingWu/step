@@ -111,8 +111,8 @@ function createListElement(text) {
  * @return {string} A formatted string.
  */
 function getFormattedComment(json) {
-    let name = json.name;
-    let comment = json.comment;
+    let commenter = json.commenter;
+    let content = json.content;
 
     let year = json.time.date.year;
     let month = json.time.date.month;
@@ -122,7 +122,8 @@ function getFormattedComment(json) {
     let minute = json.time.time.minute;
     let second = json.time.time.second;
 
-    let resultString = `Name: ${name}\nTime: ${year}/${month}/${day} ${hour}:${minute}:${second}\nComment: ${comment}`;
+    let resultString = `Commenter: ${commenter}\nTime: ${year}/${month}/${day} `
+                     + `${hour}:${minute}:${second}\nComment: ${content}`;
 
     return resultString;
 }
