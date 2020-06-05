@@ -58,10 +58,8 @@
       <form action="/list-comment" method="post" onsubmit="loadAndShowData()">
         <label for="quantity">Please select the number of comments you want to show (between 1 and 10):</label>
         <input type="number" id="quantity" name="quantity" min="1" max="10">
-        <input type="submit" value="Submit Your Choice">
+        <button>Submit</button>
       </form>
-
-      <button onclick="loadAndShowData()">Show Comments</button>
 
       <div id="comments"></div>
     </div>

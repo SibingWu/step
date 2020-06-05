@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.sps.utils.Constants.COMMENT_KEY;
+import static com.google.sps.utils.Constants.COMMENT_MAXNUMBER;
 import static com.google.sps.utils.Constants.COMMENT_TIMESTAMP;
 
 
@@ -72,12 +73,12 @@ public class ListCommentServlet extends CommentServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
-        response.sendRedirect("/index.html");
+        // response.sendRedirect("/index.html");
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String maxNumOfCommentStr = getParameter(request, "quantity", "10");
+        String maxNumOfCommentStr = getParameter(request, /*name=*/COMMENT_MAXNUMBER, /*defaultValue=*/"10");
 
         try {
             this.maxNumberOfComments = Integer.parseInt(maxNumOfCommentStr);
