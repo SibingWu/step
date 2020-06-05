@@ -87,6 +87,7 @@ function goBack() {
  */
 function loadAndShowData() {
     fetch("/comment").then(response => response.json()).then((json) => {
+        console.log(json);
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
@@ -121,8 +122,22 @@ function getFormattedComment(json) {
     let minute = json.time.time.minute;
     let second = json.time.time.second;
 
-    let resultString = `Commenter: ${commenter}\nTime: ${year}/${month}/${day} `
-                     + `${hour}:${minute}:${second}\nComment: ${content}`;
+    let timeString = getFormattedDate(json.time);
+
+
+    let resultString = `Commenter: ${commenter}\nTime: ${timeString}\nComment: ${content}`;
 
     return resultString;
+}
+
+function getFormattedDate(timeJson) {
+    let year = timeJson.date.year;
+    let month = timeJson.date.month;
+    let day = timeJson.date.day;
+
+    let hour = timeJson.time.hour;
+    let minute = timeJson.time.minute;
+    let second = timeJson.time.second;
+
+    let timeString = `${year}/${month}/${day} ${hour}:${minute}:${second}`;
 }
