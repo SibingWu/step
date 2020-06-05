@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 
 import java.io.IOException;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +20,7 @@ import static com.google.sps.utils.Constants.COMMENT_TIMESTAMP;
 
 /** Servlet that handles posting comment content. */
 @WebServlet("/list-comment")
-public class ListCommentServlet extends HttpServlet {
+public class ListCommentServlet extends CommentServlet {
     private int maxNumberOfComments;
 
     @Override
@@ -46,9 +47,6 @@ public class ListCommentServlet extends HttpServlet {
         DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastoreService.prepare(query);
 
-        String maxNumOfCommentStr = getParameter(request, "quantity", "10");
-        this.maxNumberOfComments = Integer.parseInt(maxNumOfCommentStr);
-
         List<Comment> comments = new ArrayList<>();
         for (Entity entity: results.asIterable()) {
             if (comments.size() > this.maxNumberOfComments) {
@@ -74,18 +72,21 @@ public class ListCommentServlet extends HttpServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
-        response.sendRedirect("/index.html");
     }
 
-    /**
-     * @return the value of parameter with the {@code name} in the {@code request}
-     *         or returns {@code defaultValue} if that parameter does not exist.
-     */
-    private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-        String value = request.getParameter(name);
-        if (value == null) {
-            return defaultValue;
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String maxNumOfCommentStr = getParameter(request, "quantity", "10");
+
+        try {
+            this.maxNumberOfComments = Integer.parseInt(maxNumOfCommentStr);
+        } catch (NumberFormatException e) {
+            System.err.println("Could not convert to int: " + maxNumOfCommentStr);
+            response.setContentType("text/html;");
+            response.getWriter().println("Please enter an integer between 1 and 10.");
+            return;
         }
-        return value;
+
+        response.sendRedirect("/index.html");
     }
 }
