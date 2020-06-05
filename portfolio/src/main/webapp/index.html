@@ -53,13 +53,15 @@
         <label for="content">Comment</label><br>
         <input type="text" id="contentText" name="content" size="50"><br>
         <input type="submit" value="Submit Your Comment">
-
-        <label for="quantity">Please select the number of comments you want to show (between 1 and 10):</label>
-        <input type="number" id="quantity" name="quantity" min="1" max="10">
-
       </form>
 
-      <button onclick="loadAndShowData()">Show Comments</button>
+      <form action="/list-comment" method="post">
+        <label for="quantity">Please select the number of comments you want to show (between 1 and 10):</label>
+        <input type="number" id="quantity" name="quantity" min="1" max="10">
+        <input type="submit" value="Submit Your Choice" onchange="loadAndShowData()">
+      </form>
+
+
 
       <div id="comments"></div>
     </div>

@@ -86,7 +86,7 @@ function goBack() {
  * Fetches the response of "/data".
  */
 function loadAndShowData() {
-    fetch("/comment").then(response => response.json()).then((json) => {
+    fetch("/list-comment").then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
@@ -115,7 +115,6 @@ function getFormattedComment(json) {
     let timestamp = json.timestamp;
 
     let timeString = getFormattedDate(timestamp);
-
 
     let resultString = `Commenter: ${commenter}\nTime: ${timeString}\nComment: ${content}`;
 
