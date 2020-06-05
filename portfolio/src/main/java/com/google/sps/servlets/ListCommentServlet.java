@@ -72,6 +72,7 @@ public class ListCommentServlet extends CommentServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
+        response.sendRedirect("/index.html");
     }
 
     @Override
