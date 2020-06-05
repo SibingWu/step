@@ -5,9 +5,7 @@ import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 
 import java.io.IOException;
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -73,7 +71,6 @@ public class ListCommentServlet extends CommentServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
-        // response.sendRedirect("/index.html");
     }
 
     @Override
