@@ -14,6 +14,9 @@
 
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.Entity;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 
@@ -50,12 +53,21 @@ public final class CommentServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Get comments from the form
-    String name = getParameter(request, /*name=*/"name", /*defaultValue=*/"");
-    String comment = getParameter(request, /*name=*/"comment", /*defaultValue=*/"No comments");
+    String commenter = getParameter(request, /*name=*/"commenter", /*defaultValue=*/"");
+    String content = getParameter(request, /*name=*/"content", /*defaultValue=*/"No comments");
+    long timestamp = System.currentTimeMillis();
     // TODO: validate request parameters
 
     // Modify the state of server.
-    addComment(name, comment);
+    addComment(commenter, content);
+
+    Entity commentEntity = new Entity("Comment");
+    commentEntity.setProperty("commenter", commenter);
+    commentEntity.setProperty("content", content);
+    commentEntity.setProperty("timestamp", timestamp);
+
+    DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
+    datastoreService.put(commentEntity);
 
     // Redirect back to the HTML page.
     response.sendRedirect("/index.html");
