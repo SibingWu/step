@@ -16,15 +16,15 @@
  * Adds a random greeting to the page.
  */
 function addRandomGreeting() {
-  const greetings =
+    const greetings =
       ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+    // Pick a random greeting.
+    const greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+    // Add it to the page.
+    const greetingContainer = document.getElementById('greeting-container');
+    greetingContainer.innerText = greeting;
 }
 
 /**
@@ -87,7 +87,6 @@ function goBack() {
  */
 function loadAndShowData() {
     fetch("/comment").then(response => response.json()).then((json) => {
-        console.log(json);
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
@@ -100,9 +99,9 @@ function loadAndShowData() {
 
 /** Creates an <li> element containing text. */
 function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+    const liElement = document.createElement('li');
+    liElement.innerText = text;
+    return liElement;
 }
 
 /**
