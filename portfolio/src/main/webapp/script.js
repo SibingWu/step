@@ -98,6 +98,8 @@ function loadAndShowComments() {
             div.appendChild(createListElement(commentString));
         }
     });
+
+    window.location = "/index.html";
 }
 
 /** Creates an <li> element containing text. */
