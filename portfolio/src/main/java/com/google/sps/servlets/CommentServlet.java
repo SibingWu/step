@@ -30,11 +30,19 @@ import java.util.List;
 import static com.google.sps.utils.Constants.COMMENT_COMMENTER;
 import static com.google.sps.utils.Constants.COMMENT_CONTENT;
 import static com.google.sps.utils.Constants.COMMENT_KEY;
+import static com.google.sps.utils.Constants.COMMENT_MAXNUMBER;
 import static com.google.sps.utils.Constants.COMMENT_TIMESTAMP;
 
 /** Servlet that handles getting and posting comment content. */
 @WebServlet("/comment")
 public final class CommentServlet extends HttpServlet {
+
+  private int maxNumberOfComments;
+
+  @Override
+  public void init() {
+    this.maxNumberOfComments = 10; // default value
+  }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -57,13 +65,17 @@ public final class CommentServlet extends HttpServlet {
 
     List<Comment> comments = new ArrayList<>();
     for (Entity entity: results.asIterable()) {
+      if (comments.size() > this.maxNumberOfComments) {
+        break;
+      }
+
       // Loads comments from Datastore
       Comment comment = Comment.CREATOR.fromEntity(entity);
       comments.add(comment);
     }
+
     return comments;
   }
-
 
   /** Converts the list of Comment objecct into json form */
   private String convertToJsonUsingGson(List<Comment> comments) {
@@ -83,6 +95,11 @@ public final class CommentServlet extends HttpServlet {
     // Gets comments from the form
     String commenter = getParameter(request, /*name=*/COMMENT_COMMENTER, /*defaultValue=*/"");
     String content = getParameter(request, /*name=*/COMMENT_CONTENT, /*defaultValue=*/"No comments");
+
+    String maxNumOfCommentStr = getParameter(request, /*name=*/COMMENT_MAXNUMBER, "10");
+    if (maxNumOfCommentStr != null) {
+      this.maxNumberOfComments = Integer.parseInt(maxNumOfCommentStr);
+    }
     // TODO: validate request parameters
 
     // Stores the comment into the Datastore
