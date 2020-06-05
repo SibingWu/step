@@ -30,6 +30,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+import static com.google.sps.utils.Constants.COMMENT_COMMENTER;
+import static com.google.sps.utils.Constants.COMMENT_CONTENT;
+import static com.google.sps.utils.Constants.COMMENT_KEY;
+import static com.google.sps.utils.Constants.COMMENT_TIMESTAMP;
+
 /** Servlet that handles getting and posting comment content. */
 @WebServlet("/comment")
 public final class CommentServlet extends HttpServlet {
@@ -92,27 +97,30 @@ public final class CommentServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Gets comments from the form
-    String name = getParameter(request, /*name=*/"name", /*defaultValue=*/"");
-    String comment = getParameter(request, /*name=*/"comment", /*defaultValue=*/"No comments");
-    long timestamp = System.currentTimeMillis();
+    String commenter = getParameter(request, /*name=*/COMMENT_COMMENTER, /*defaultValue=*/"");
+    String content = getParameter(request, /*name=*/COMMENT_CONTENT, /*defaultValue=*/"No comments");
     // TODO: validate request parameters
 
     // Stores the comment into the Datastore
-    storeComment(name, comment, timestamp);
+    storeComment(commenter, content);
 
     // Redirects back to the HTML page.
     response.sendRedirect("/index.html");
   }
 
   /** Stores the comment into the Datastore */
-  private void storeComment(String name, String comment, long timestamp) {
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("name", name);
-    commentEntity.setProperty("comment", comment);
-    commentEntity.setProperty("timestamp", timestamp);
+  private void storeComment(String commenter, String content) {
+    // create a miscellaneous comment object to convert it to entity
+    Comment comment = createCommentFromParam(0, commenter, content, LocalDateTime.now());
 
+    // put the entity into Datastore
     DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-    datastoreService.put(commentEntity);
+    datastoreService.put(comment.toEntity(COMMENT_KEY));
+  }
+
+  /** Creates the Comment object from parameters retrieved */
+  private Comment createCommentFromParam(int id, String commenter, String content, LocalDateTime time) {
+    return new Comment(id, commenter, content, time);
   }
 
   /**
