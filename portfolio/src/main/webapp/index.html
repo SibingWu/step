@@ -55,10 +55,19 @@
         <input type="submit" value="Submit Your Comment">
       </form>
 
-      <form id="quantityForm" action="/list-comment" method="post">
+      <form action="/list-comment" method="post">
         <label for="quantity">Please select the number of comments you want to show (between 1 and 10):</label>
-        <input type="number" id="quantity" name="quantity" min="1" max="10">
-        <input type="button" value="Submit Your Choice" onclick="loadAndShowComments()">
+        <select id="quantity" onchange="loadAndShowComments()">
+          <script>
+            for (let i = 1; i <= 10; i++) {
+              let option = document.createElement("option");
+              let attribute = document.createAttribute("value");
+              attribute.value = "" + i;
+              option.setAttribute(attribute);
+              option.innerHTML = "" + i;
+            }
+          </script>
+        </select>
       </form>
 
       <div id="comments"></div>
