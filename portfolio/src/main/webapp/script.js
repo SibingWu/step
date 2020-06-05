@@ -85,7 +85,9 @@ function goBack() {
 /**
  * Fetches the response of "/data".
  */
-function loadAndShowData() {
+function loadAndShowComments() {
+    document.getElementById("quantityForm").submit();
+
     fetch("/list-comment").then(response => response.json()).then((json) => {
         console.log(json);
         const div = document.getElementById("comments");

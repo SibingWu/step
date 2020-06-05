@@ -86,6 +86,6 @@ public class ListCommentServlet extends CommentServlet {
             return;
         }
 
-        response.sendRedirect("/index.html");
+        // response.sendRedirect("/index.html");
     }
 }
