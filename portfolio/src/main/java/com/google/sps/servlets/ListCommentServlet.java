@@ -30,7 +30,7 @@ public class ListCommentServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Loads the comment from Datastore
-        List<Comment> comments = getComments();
+        List<Comment> comments = getComments(request);
 
         // Converts into json form
         String json = convertToJsonUsingGson(comments);
@@ -40,11 +40,14 @@ public class ListCommentServlet extends HttpServlet {
     }
 
     /** Loads the comment from Datastore */
-    private List<Comment> getComments() {
+    private List<Comment> getComments(HttpServletRequest request) {
         Query query = new Query(COMMENT_KEY).addSort(COMMENT_TIMESTAMP, Query.SortDirection.DESCENDING);
 
         DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastoreService.prepare(query);
+
+        String maxNumOfCommentStr = getParameter(request, "quantity", "10");
+        this.maxNumberOfComments = Integer.parseInt(maxNumOfCommentStr);
 
         List<Comment> comments = new ArrayList<>();
         for (Entity entity: results.asIterable()) {
@@ -71,5 +74,18 @@ public class ListCommentServlet extends HttpServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
+        response.sendRedirect("/index.html");
+    }
+
+    /**
+     * @return the value of parameter with the {@code name} in the {@code request}
+     *         or returns {@code defaultValue} if that parameter does not exist.
+     */
+    private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+        String value = request.getParameter(name);
+        if (value == null) {
+            return defaultValue;
+        }
+        return value;
     }
 }
