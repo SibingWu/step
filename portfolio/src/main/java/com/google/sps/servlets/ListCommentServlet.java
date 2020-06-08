@@ -92,7 +92,5 @@ public class ListCommentServlet extends CommentServlet {
         }
 
         response.sendRedirect("/index.html");
-
-        // TODO: how to click a button and submit form then execute javascript function
     }
 }
