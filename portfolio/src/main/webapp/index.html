@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body>
+  <body onload="loadAndShowComments()">
     <div id="content">
       <h1>Wu Sibing's Portfolio</h1>
       <p>This is my portfolio.</p>
@@ -63,7 +63,7 @@
           <option value="2">
         </datalist>
 
-        <input type="submit" value="Submit Your Choice" onsubmit="loadAndShowComments()">
+        <input type="submit" value="Submit Your Choice">
       </form>
 
       <div id="comments"></div>

@@ -24,20 +24,20 @@ public class ListCommentServlet extends CommentServlet {
 
     @Override
     public void init() {
-        this.maxNumberOfComments = 10; // default value
+        this.maxNumberOfComments = 0; // default value
     }
 
-//    @Override
-//    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        // Loads the comment from Datastore
-//        List<Comment> comments = getComments(request);
-//
-//        // Converts into json form
-//        String json = convertToJsonUsingGson(comments);
-//
-//        // Sends the JSON as the response
-//        sendJsonResponse(response, json);
-//    }
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // Loads the comment from Datastore
+        List<Comment> comments = getComments(request);
+
+        // Converts into json form
+        String json = convertToJsonUsingGson(comments);
+
+        // Sends the JSON as the response
+        sendJsonResponse(response, json);
+    }
 
     /** Loads the comment from Datastore */
     private List<Comment> getComments(HttpServletRequest request) {
@@ -85,15 +85,6 @@ public class ListCommentServlet extends CommentServlet {
             response.getWriter().println("Please enter an integer between 1 and 10.");
             return;
         }
-
-        // Loads the comment from Datastore
-        List<Comment> comments = getComments(request);
-
-        // Converts into json form
-        String json = convertToJsonUsingGson(comments);
-
-        // Sends the JSON as the response
-        sendJsonResponse(response, json);
 
         response.sendRedirect("/index.html");
 
