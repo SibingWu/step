@@ -16,7 +16,7 @@ package com.google.sps.servlets;
 
 import com.google.sps.data.Comment;
 import com.google.sps.utils.CommentDataStore;
-import com.google.sps.utils.CommentUtils;
+import com.google.sps.utils.ServletUtils;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -29,17 +29,17 @@ import javax.servlet.http.HttpServletResponse;
 public final class NewCommentServlet extends HttpServlet {
 
   static class Constants {
-    final static String COMMENT_COMMENTER = "commenter";
-    final static String COMMENT_CONTENT = "content";
+    private final static String PARAM_NAME_COMMENTER = "commenter";
+    private final static String PARAM_NAME_CONTENT = "content";
   }
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Gets comments from the form
-    String commenter = CommentUtils.getParameter(
-            request, /*name=*/Constants.COMMENT_COMMENTER, /*defaultValue=*/"");
-    String content = CommentUtils.getParameter(
-            request, /*name=*/Constants.COMMENT_CONTENT, /*defaultValue=*/"No comments");
+    String commenter = ServletUtils.getParameter(
+            request, /*name=*/Constants.PARAM_NAME_COMMENTER, /*defaultValue=*/"");
+    String content = ServletUtils.getParameter(
+            request, /*name=*/Constants.PARAM_NAME_CONTENT, /*defaultValue=*/"No comments");
     // TODO: validate request parameters
 
     // Stores the comment into the Datastore
@@ -56,6 +56,6 @@ public final class NewCommentServlet extends HttpServlet {
     Comment comment = new Comment(commenter, content, timestamp);
 
     // Stores the comment as an entity into Datastore
-    CommentDataStore.store(comment);
+    CommentDataStore.COMMENT_OBJECT_DATA_STORE.store(comment);
   }
 }

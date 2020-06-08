@@ -1,10 +1,9 @@
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.*;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import com.google.sps.utils.CommentDataStore;
-import com.google.sps.utils.CommentUtils;
+import com.google.sps.utils.ServletUtils;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,9 +19,7 @@ import java.util.List;
 public class ListCommentServlet extends HttpServlet {
     private int maxNumberOfComments;
 
-    static class Constants {
-        final static String MAXNUMBER = "quantity";
-    }
+    private static final String PARAM_NAME_QUANTITY = "quantity";
 
     @Override
     public void init() {
@@ -33,10 +29,10 @@ public class ListCommentServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Gets the displayed comment limit
-        getMaxNumberOfComments(request, response);
+        int limit = getMaxNumberOfComments(request, response);
 
         // Loads the comment from Datastore
-        List<Comment> comments = getComments(request);
+        List<Comment> comments = getComments(request, limit);
 
         // Converts into json form
         String json = convertToJsonUsingGson(comments);
@@ -45,36 +41,35 @@ public class ListCommentServlet extends HttpServlet {
         sendJsonResponse(response, json);
     }
 
-    private void getMaxNumberOfComments(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String maxNumOfCommentStr = CommentUtils.getParameter(
-                request, /*name=*/Constants.MAXNUMBER, /*defaultValue=*/"10");
+    private int getMaxNumberOfComments(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String maxNumOfCommentStr = ServletUtils.getParameter(
+                request, /*name=*/PARAM_NAME_QUANTITY, /*defaultValue=*/"10");
+
+        int limit = 0;
 
         try {
-            this.maxNumberOfComments = Integer.parseInt(maxNumOfCommentStr);
+            limit = Integer.parseInt(maxNumOfCommentStr);
 
             if (this.maxNumberOfComments < 1 || this.maxNumberOfComments > 10) {
-                response.setContentType("text/html;");
+                response.setContentType("application/json;");
                 response.getWriter().println("Please enter an integer between 1 and 10.");
             }
         } catch (NumberFormatException e) {
             System.err.println("Could not convert to int: " + maxNumOfCommentStr);
-            response.setContentType("text/html;");
+            response.setContentType("application/json;");
             response.getWriter().println("Please enter an integer between 1 and 10.");
+
+            return limit;
         }
 
-        response.sendRedirect("/index.html");
+        return limit;
     }
 
     /** Loads the comment from Datastore */
-    private List<Comment> getComments(HttpServletRequest request) {
+    private List<Comment> getComments(HttpServletRequest request, int limit) {
         // Loads comments from Datastore
-        Iterable<Entity> entityIterable = CommentDataStore.load();
+        List<Comment> comments = CommentDataStore.COMMENT_OBJECT_DATA_STORE.load(limit);
 
-        List<Comment> comments = new ArrayList<>();
-        for (Entity entity: entityIterable) {
-            Comment comment = Comment.CREATOR.fromEntity(entity);
-            comments.add(comment);
-        }
         return comments;
     }
 
@@ -92,8 +87,8 @@ public class ListCommentServlet extends HttpServlet {
         this.maxNumberOfComments = 0;
     }
 
-//    @Override
-//    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 //        String maxNumOfCommentStr = CommentUtils.getParameter(
 //                request, /*name=*/Constants.MAXNUMBER, /*defaultValue=*/"10");
 //
@@ -109,7 +104,7 @@ public class ListCommentServlet extends HttpServlet {
 //            response.setContentType("text/html;");
 //            response.getWriter().println("Please enter an integer between 1 and 10.");
 //        }
-//
-//        response.sendRedirect("/index.html");
-//    }
+
+        response.sendRedirect("/index.html");
+    }
 }

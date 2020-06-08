@@ -14,28 +14,28 @@ public final class Comment implements EntityConvertible {
         this.timestamp = timestamp;
     }
 
-    static class Constants {
-        final static String KIND = "Comment";
-        final static String COMMENTER = "commenter";
-        final static String CONTENT = "content";
-        final static String TIMESTAMP = "timestamp";
+    static class PropertyName {
+        private final static String KIND = "Comment";
+        private final static String COMMENTER = "commenter";
+        private final static String CONTENT = "content";
+        private final static String TIMESTAMP = "timestamp";
     }
 
     @Override
     public Entity toEntity(String key) {
-        Entity commentEntity = new Entity(Constants.KIND);
-        commentEntity.setProperty(Constants.COMMENTER, this.commenter);
-        commentEntity.setProperty(Constants.CONTENT, this.content);
-        commentEntity.setProperty(Constants.TIMESTAMP, this.timestamp);
+        Entity commentEntity = new Entity(PropertyName.KIND);
+        commentEntity.setProperty(PropertyName.COMMENTER, this.commenter);
+        commentEntity.setProperty(PropertyName.CONTENT, this.content);
+        commentEntity.setProperty(PropertyName.TIMESTAMP, this.timestamp);
 
         return commentEntity;
     }
 
     public static final EntityConvertibleCreator<Comment> CREATOR
             = entity -> {
-                String commenter = (String) entity.getProperty(Constants.COMMENTER);
-                String content = (String) entity.getProperty(Constants.CONTENT);
-                long timestamp = (long) entity.getProperty(Constants.TIMESTAMP);
+                String commenter = (String) entity.getProperty(PropertyName.COMMENTER);
+                String content = (String) entity.getProperty(PropertyName.CONTENT);
+                long timestamp = (long) entity.getProperty(PropertyName.TIMESTAMP);
 
                 Comment comment = new Comment(commenter, content, timestamp);
                 return comment;
