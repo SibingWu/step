@@ -37,22 +37,14 @@ public class ListCommentServlet extends HttpServlet {
 
     private int getMaxNumberOfComments(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String maxNumOfCommentStr = ServletUtils.getParameter(
-                request, /*name=*/PARAM_NAME_QUANTITY, /*defaultValue=*/"10");
+                request, /*name=*/PARAM_NAME_QUANTITY, /*defaultValue=*/"0");
 
         int limit = 0;
 
         try {
             limit = Integer.parseInt(maxNumOfCommentStr);
-
-            if (limit < 1 || limit > 10) {
-                response.setContentType("application/json;");
-                response.getWriter().println("Please enter an integer between 1 and 10.");
-                return 0;
-            }
         } catch (NumberFormatException e) {
             System.err.println("Could not convert to int: " + maxNumOfCommentStr);
-            response.setContentType("application/json;");
-            response.getWriter().println("Please enter an integer between 1 and 10.");
 
             return limit;
         }
