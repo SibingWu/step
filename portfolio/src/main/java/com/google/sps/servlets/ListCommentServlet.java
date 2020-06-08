@@ -17,14 +17,8 @@ import java.util.List;
 /** Servlet that handles posting comment content. */
 @WebServlet("/list-comment")
 public class ListCommentServlet extends HttpServlet {
-    private int maxNumberOfComments;
 
     private static final String PARAM_NAME_QUANTITY = "quantity";
-
-    @Override
-    public void init() {
-        this.maxNumberOfComments = 0; // default value
-    }
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -32,7 +26,7 @@ public class ListCommentServlet extends HttpServlet {
         int limit = getMaxNumberOfComments(request, response);
 
         // Loads the comment from Datastore
-        List<Comment> comments = getComments(request, limit);
+        List<Comment> comments = getComments(limit);
 
         // Converts into json form
         String json = convertToJsonUsingGson(comments);
@@ -50,9 +44,10 @@ public class ListCommentServlet extends HttpServlet {
         try {
             limit = Integer.parseInt(maxNumOfCommentStr);
 
-            if (this.maxNumberOfComments < 1 || this.maxNumberOfComments > 10) {
+            if (limit < 1 || limit > 10) {
                 response.setContentType("application/json;");
                 response.getWriter().println("Please enter an integer between 1 and 10.");
+                return 0;
             }
         } catch (NumberFormatException e) {
             System.err.println("Could not convert to int: " + maxNumOfCommentStr);
@@ -66,7 +61,7 @@ public class ListCommentServlet extends HttpServlet {
     }
 
     /** Loads the comment from Datastore */
-    private List<Comment> getComments(HttpServletRequest request, int limit) {
+    private List<Comment> getComments(int limit) {
         // Loads comments from Datastore
         List<Comment> comments = CommentDataStore.COMMENT_OBJECT_DATA_STORE.load(limit);
 
@@ -84,7 +79,6 @@ public class ListCommentServlet extends HttpServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
-        this.maxNumberOfComments = 0;
     }
 
     @Override
