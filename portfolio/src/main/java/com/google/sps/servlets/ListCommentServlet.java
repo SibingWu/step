@@ -43,8 +43,14 @@ public class ListCommentServlet extends HttpServlet {
 
         try {
             limit = Integer.parseInt(maxNumOfCommentStr);
+
+            if (limit < 1 || limit > 10) {
+                return 0;
+            }
         } catch (NumberFormatException e) {
             System.err.println("Could not convert to int: " + maxNumOfCommentStr);
+            response.setContentType("text/html;");
+            response.getWriter().println("Please enter an integer between 1 and 10.");
 
             return limit;
         }
