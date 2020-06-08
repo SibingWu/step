@@ -16,7 +16,9 @@ package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.*;
 import com.google.gson.Gson;
+import com.google.sps.utils.CommentDataStore;
 import com.google.sps.data.Comment;
+import com.google.sps.utils.CommentUtils;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -27,14 +29,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.sps.utils.Constants.COMMENT_COMMENTER;
-import static com.google.sps.utils.Constants.COMMENT_CONTENT;
-import static com.google.sps.utils.Constants.COMMENT_KEY;
-import static com.google.sps.utils.Constants.COMMENT_TIMESTAMP;
-
 /** Servlet that handles getting and posting comment content. */
 @WebServlet("/comment")
 public final class CommentServlet extends HttpServlet {
+
+  static class Constants {
+    final static String COMMENT_COMMENTER = "commenter";
+    final static String COMMENT_CONTENT = "content";
+  }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -50,14 +52,11 @@ public final class CommentServlet extends HttpServlet {
 
   /** Loads the comment from Datastore */
   private List<Comment> getComments() {
-    Query query = new Query(COMMENT_KEY).addSort(COMMENT_TIMESTAMP, Query.SortDirection.DESCENDING);
-
-    DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastoreService.prepare(query);
+    // Loads comments from Datastore
+    Iterable<Entity> entityIterable = CommentDataStore.load();
 
     List<Comment> comments = new ArrayList<>();
-    for (Entity entity: results.asIterable()) {
-      // Loads comments from Datastore
+    for (Entity entity: entityIterable) {
       Comment comment = Comment.CREATOR.fromEntity(entity);
       comments.add(comment);
     }
@@ -81,8 +80,10 @@ public final class CommentServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Gets comments from the form
-    String commenter = getParameter(request, /*name=*/COMMENT_COMMENTER, /*defaultValue=*/"");
-    String content = getParameter(request, /*name=*/COMMENT_CONTENT, /*defaultValue=*/"No comments");
+    String commenter = CommentUtils.getParameter(
+            request, /*name=*/Constants.COMMENT_COMMENTER, /*defaultValue=*/"");
+    String content = CommentUtils.getParameter(
+            request, /*name=*/Constants.COMMENT_CONTENT, /*defaultValue=*/"No comments");
     // TODO: validate request parameters
 
     // Stores the comment into the Datastore
@@ -94,24 +95,11 @@ public final class CommentServlet extends HttpServlet {
 
   /** Stores the comment into the Datastore */
   private void storeComment(String commenter, String content) {
-    // create a miscellaneous comment object to convert it to entity
+    // Creates a miscellaneous comment object to convert it to entity
     long timestamp = System.currentTimeMillis();
-    Comment comment = new Comment(0, commenter, content, timestamp);
+    Comment comment = new Comment(commenter, content, timestamp);
 
-    // put the entity into Datastore
-    DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-    datastoreService.put(comment.toEntity(COMMENT_KEY));
-  }
-
-  /**
-   * @return the value of parameter with the {@code name} in the {@code request}
-   *         or returns {@code defaultValue} if that parameter does not exist.
-   */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
+    // Stores the comment as an entity into Datastore
+    CommentDataStore.store(comment);
   }
 }
