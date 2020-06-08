@@ -27,17 +27,17 @@ public class ListCommentServlet extends CommentServlet {
         this.maxNumberOfComments = 10; // default value
     }
 
-    @Override
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        // Loads the comment from Datastore
-        List<Comment> comments = getComments(request);
-
-        // Converts into json form
-        String json = convertToJsonUsingGson(comments);
-
-        // Sends the JSON as the response
-        sendJsonResponse(response, json);
-    }
+//    @Override
+//    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        // Loads the comment from Datastore
+//        List<Comment> comments = getComments(request);
+//
+//        // Converts into json form
+//        String json = convertToJsonUsingGson(comments);
+//
+//        // Sends the JSON as the response
+//        sendJsonResponse(response, json);
+//    }
 
     /** Loads the comment from Datastore */
     private List<Comment> getComments(HttpServletRequest request) {
@@ -86,6 +86,17 @@ public class ListCommentServlet extends CommentServlet {
             return;
         }
 
-        // response.sendRedirect("/index.html");
+        // Loads the comment from Datastore
+        List<Comment> comments = getComments(request);
+
+        // Converts into json form
+        String json = convertToJsonUsingGson(comments);
+
+        // Sends the JSON as the response
+        sendJsonResponse(response, json);
+
+        response.sendRedirect("/index.html");
+
+        // TODO: how to click a button and submit form then execute javascript function
     }
 }

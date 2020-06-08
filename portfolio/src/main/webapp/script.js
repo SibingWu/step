@@ -86,8 +86,6 @@ function goBack() {
  * Fetches the response of "/data".
  */
 function loadAndShowComments() {
-    // document.getElementById("quantityForm").submit();
-
     fetch("/list-comment").then(response => response.json()).then((json) => {
         console.log(json);
         const div = document.getElementById("comments");
@@ -98,8 +96,6 @@ function loadAndShowComments() {
             div.appendChild(createListElement(commentString));
         }
     });
-
-    window.location = "/index.html";
 }
 
 /** Creates an <li> element containing text. */
