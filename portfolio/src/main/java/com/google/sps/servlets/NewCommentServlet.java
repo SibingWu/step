@@ -40,7 +40,7 @@ public final class NewCommentServlet extends CommentServlet {
     storeComment(commenter, content);
 
     // Redirects back to the HTML page.
-    response.sendRedirect("/index.html");
+    response.sendRedirect("/comments.html");
   }
 
   /** Stores the comment into the Datastore */
