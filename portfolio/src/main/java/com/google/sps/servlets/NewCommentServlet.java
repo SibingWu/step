@@ -14,26 +14,32 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.*;
 import com.google.sps.data.Comment;
+import com.google.sps.utils.CommentDataStore;
+import com.google.sps.utils.CommentUtils;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.google.sps.utils.Constants.COMMENT_COMMENTER;
-import static com.google.sps.utils.Constants.COMMENT_CONTENT;
-import static com.google.sps.utils.Constants.COMMENT_KEY;
-
-/** Servlet that handles getting comment content. */
+/** Servlet that handles posting new comment. */
 @WebServlet("/comment")
-public final class NewCommentServlet extends CommentServlet {
+public final class NewCommentServlet extends HttpServlet {
+
+  static class Constants {
+    final static String COMMENT_COMMENTER = "commenter";
+    final static String COMMENT_CONTENT = "content";
+  }
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Gets comments from the form
-    String commenter = getParameter(request, /*name=*/COMMENT_COMMENTER, /*defaultValue=*/"");
-    String content = getParameter(request, /*name=*/COMMENT_CONTENT, /*defaultValue=*/"No comments");
+    String commenter = CommentUtils.getParameter(
+            request, /*name=*/Constants.COMMENT_COMMENTER, /*defaultValue=*/"");
+    String content = CommentUtils.getParameter(
+            request, /*name=*/Constants.COMMENT_CONTENT, /*defaultValue=*/"No comments");
     // TODO: validate request parameters
 
     // Stores the comment into the Datastore
@@ -45,12 +51,11 @@ public final class NewCommentServlet extends CommentServlet {
 
   /** Stores the comment into the Datastore */
   private void storeComment(String commenter, String content) {
-    // create a miscellaneous comment object to convert it to entity
+    // Creates a miscellaneous comment object to convert it to entity
     long timestamp = System.currentTimeMillis();
-    Comment comment = new Comment(0, commenter, content, timestamp);
+    Comment comment = new Comment(commenter, content, timestamp);
 
-    // put the entity into Datastore
-    DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-    datastoreService.put(comment.toEntity(COMMENT_KEY));
+    // Stores the comment as an entity into Datastore
+    CommentDataStore.store(comment);
   }
 }

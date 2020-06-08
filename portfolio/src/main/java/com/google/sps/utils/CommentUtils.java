@@ -1,14 +1,14 @@
-package com.google.sps.servlets;
+package com.google.sps.utils;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 
-public class CommentServlet extends HttpServlet {
+/** Auxiliary functions and variables to support comment feature. */
+public class CommentUtils {
     /**
      * @return the value of parameter with the {@code name} in the {@code request}
      *         or returns {@code defaultValue} if that parameter does not exist.
      */
-    protected String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    public static String getParameter(HttpServletRequest request, String name, String defaultValue) {
         String value = request.getParameter(name);
         if (value == null) {
             return defaultValue;
