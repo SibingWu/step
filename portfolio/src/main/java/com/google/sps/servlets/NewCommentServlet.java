@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static com.google.sps.utils.Constants.COMMENT_COMMENTER;
 import static com.google.sps.utils.Constants.COMMENT_CONTENT;
-import static com.google.sps.utils.Constants.COMMENT_KEY;
+import static com.google.sps.utils.Constants.COMMENT_KIND;
 
 /** Servlet that handles getting comment content. */
 @WebServlet("/comment")
@@ -51,6 +51,6 @@ public final class NewCommentServlet extends CommentServlet {
 
     // put the entity into Datastore
     DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-    datastoreService.put(comment.toEntity(COMMENT_KEY));
+    datastoreService.put(comment.toEntity(COMMENT_KIND));
   }
 }

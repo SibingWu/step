@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.sps.utils.Constants.COMMENT_KEY;
+import static com.google.sps.utils.Constants.COMMENT_KIND;
 import static com.google.sps.utils.Constants.COMMENT_MAXNUMBER;
 import static com.google.sps.utils.Constants.COMMENT_TIMESTAMP;
 
@@ -41,7 +41,7 @@ public class ListCommentServlet extends CommentServlet {
 
     /** Loads the comment from Datastore */
     private List<Comment> getComments(HttpServletRequest request) {
-        Query query = new Query(COMMENT_KEY).addSort(COMMENT_TIMESTAMP, Query.SortDirection.DESCENDING);
+        Query query = new Query(COMMENT_KIND).addSort(COMMENT_TIMESTAMP, Query.SortDirection.DESCENDING);
 
         DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastoreService.prepare(query);

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="script.js"></script>
   </head>
-  <body onload="loadAndShowComments()">
+  <body>
     <div id="content">
       <h1>Wu Sibing's Portfolio</h1>
       <p>This is my portfolio.</p>
@@ -44,25 +44,9 @@
       <p id="data"></p>
 
       <p style="align: middle">Click <a href="images.html">here</a> to see more pictures of Sibing!</p>
-      <p style="align: middle">Click <a href="blog.html">here</a> to see more hidden hobbies of Sibing!</p>
+      <p style="align: middle">Click <a href="blogs.html">here</a> to see more hidden hobbies of Sibing!</p>
 
-      <form action="/comment" method="post">
-        <label>Leave Your Comment Below</label><br>
-        <label for="commenter">Commenter Name</label>
-        <input type="text" id="commenter" name="commenter"><br>
-        <label for="content">Comment</label><br>
-        <input type="text" id="contentText" name="content" size="50"><br>
-        <input type="submit" value="Submit Your Comment">
-      </form>
-
-      <form action="/list-comment" method="post">
-        <label for="quantity">Please select the number of comments you want to show (between 1 and 10):</label>
-        <input type="number" id="quantity" name="quantity" min="1" max="10">
-
-        <input type="submit" value="Submit Your Choice">
-      </form>
-
-      <div id="comments"></div>
+      <p style="align: middle">Click<a href="comments.html">Here</a> to Leave Your Comments:)</p>
     </div>
   </body>
 </html>

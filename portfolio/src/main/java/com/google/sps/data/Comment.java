@@ -4,7 +4,7 @@ import com.google.appengine.api.datastore.Entity;
 
 import static com.google.sps.utils.Constants.COMMENT_COMMENTER;
 import static com.google.sps.utils.Constants.COMMENT_CONTENT;
-import static com.google.sps.utils.Constants.COMMENT_KEY;
+import static com.google.sps.utils.Constants.COMMENT_KIND;
 import static com.google.sps.utils.Constants.COMMENT_TIMESTAMP;
 
 /** Represents a comment with related details. */
@@ -23,7 +23,7 @@ public final class Comment implements EntityConvertible {
 
     @Override
     public Entity toEntity(String key) {
-        Entity commentEntity = new Entity(COMMENT_KEY);
+        Entity commentEntity = new Entity(COMMENT_KIND);
         commentEntity.setProperty(COMMENT_COMMENTER, this.commenter);
         commentEntity.setProperty(COMMENT_CONTENT, this.content);
         commentEntity.setProperty(COMMENT_TIMESTAMP, this.timestamp);

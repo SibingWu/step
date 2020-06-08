@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Your Comment Here</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</head>
+<body onload="loadAndShowComments()">
+    <div id="content">
+        <form action="/comment" method="post">
+            <label>Leave Your Comment Below</label><br>
+            <label for="commenter">Commenter Name</label>
+            <input type="text" id="commenter" name="commenter"><br>
+            <label for="contentText">Comment</label><br>
+            <input type="text" id="contentText" name="contentText" size="50"><br>
+            <input type="submit" value="Submit Your Comment">
+        </form>
+
+        <form action="/list-comment" method="post">
+            <label for="quantity">Please select the number of comments you want to show (between 1 and 10):</label>
+            <input type="number" id="quantity" name="quantity" min="1" max="10">
+
+            <input type="submit" value="Submit Your Choice">
+        </form>
+
+        <div id="comments"></div>
+    </div>
+</body>
+</html>
