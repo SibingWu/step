@@ -91,6 +91,6 @@ public class ListCommentServlet extends CommentServlet {
             response.getWriter().println("Please enter an integer between 1 and 10.");
         }
 
-        response.sendRedirect("/index.html");
+        response.sendRedirect("/comments.html");
     }
 }
