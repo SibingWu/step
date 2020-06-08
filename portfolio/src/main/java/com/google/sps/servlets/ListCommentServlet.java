@@ -21,12 +21,10 @@ import static com.google.sps.utils.Constants.COMMENT_TIMESTAMP;
 @WebServlet("/list-comment")
 public class ListCommentServlet extends CommentServlet {
     private int maxNumberOfComments;
-    private List<Comment> comments;
 
     @Override
     public void init() {
         this.maxNumberOfComments = 0; // default value
-        comments = new ArrayList<>();
     }
 
     @Override
@@ -48,9 +46,9 @@ public class ListCommentServlet extends CommentServlet {
         DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
         PreparedQuery results = datastoreService.prepare(query);
 
-        comments = new ArrayList<>();
+        List<Comment> comments = new ArrayList<>();
         for (Entity entity: results.asIterable()) {
-            if (comments.size() > this.maxNumberOfComments) {
+            if (comments.size() >= this.maxNumberOfComments) {
                 break;
             }
 
