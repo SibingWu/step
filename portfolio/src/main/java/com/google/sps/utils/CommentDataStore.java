@@ -41,6 +41,10 @@ public class CommentDataStore {
 
             List<Comment> comments = new ArrayList<>();
             for (Entity entity: results.asIterable()) {
+                if (comments.size() >= limit) {
+                    break;
+                }
+
                 Comment comment = Comment.CREATOR.fromEntity(entity);
                 comments.add(comment);
             }
