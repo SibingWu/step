@@ -80,6 +80,11 @@ public class ListCommentServlet extends CommentServlet {
 
         try {
             this.maxNumberOfComments = Integer.parseInt(maxNumOfCommentStr);
+
+            if (this.maxNumberOfComments < 1 || this.maxNumberOfComments > 10) {
+                response.setContentType("text/html;");
+                response.getWriter().println("Please enter an integer between 1 and 10.");
+            }
         } catch (NumberFormatException e) {
             System.err.println("Could not convert to int: " + maxNumOfCommentStr);
             response.setContentType("text/html;");
