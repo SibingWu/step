@@ -71,6 +71,7 @@ public class ListCommentServlet extends CommentServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
+        this.maxNumberOfComments = 0;
     }
 
     @Override
@@ -83,7 +84,6 @@ public class ListCommentServlet extends CommentServlet {
             System.err.println("Could not convert to int: " + maxNumOfCommentStr);
             response.setContentType("text/html;");
             response.getWriter().println("Please enter an integer between 1 and 10.");
-            return;
         }
 
         response.sendRedirect("/index.html");
