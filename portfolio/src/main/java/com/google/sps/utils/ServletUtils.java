@@ -23,13 +23,13 @@ public class ServletUtils {
      * Gets the integer parameter from html form input.
      * @param request Http request.
      * @param parameterName Input id in html element.
-     * @param defaultValue Default integer string.
-     * @return Parsed integer or -1.
+     * @param defaultValue Default integer.
+     * @return Parsed integer or default value if exception occur
      */
-    public static int getIntParameter(HttpServletRequest request, String parameterName, String defaultValue) {
-        String maxNumOfCommentStr = ServletUtils.getParameter(request, parameterName, defaultValue);
+    public static int getIntParameter(HttpServletRequest request, String parameterName, int defaultValue) {
+        String maxNumOfCommentStr = request.getParameter(parameterName);
 
-        int result = -1;
+        int result = defaultValue;
 
         try {
             result = Integer.parseInt(maxNumOfCommentStr);

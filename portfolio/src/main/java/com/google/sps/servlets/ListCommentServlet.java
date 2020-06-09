@@ -26,7 +26,7 @@ public class ListCommentServlet extends HttpServlet {
     }
 
     private static final String PARAM_NAME_QUANTITY = "quantity";
-    private static final String DEFAULT_COMMENT_QUANTITY = "0";
+    private static final int DEFAULT_COMMENT_QUANTITY = 0;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
