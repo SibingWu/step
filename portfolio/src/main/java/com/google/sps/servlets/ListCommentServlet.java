@@ -63,26 +63,6 @@ public class ListCommentServlet extends HttpServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
-    }
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-//        String maxNumOfCommentStr = CommentUtils.getParameter(
-//                request, /*name=*/Constants.MAXNUMBER, /*defaultValue=*/"10");
-//
-//        try {
-//            this.maxNumberOfComments = Integer.parseInt(maxNumOfCommentStr);
-//
-//            if (this.maxNumberOfComments < 1 || this.maxNumberOfComments > 10) {
-//                response.setContentType("text/html;");
-//                response.getWriter().println("Please enter an integer between 1 and 10.");
-//            }
-//        } catch (NumberFormatException e) {
-//            System.err.println("Could not convert to int: " + maxNumOfCommentStr);
-//            response.setContentType("text/html;");
-//            response.getWriter().println("Please enter an integer between 1 and 10.");
-//        }
-
         response.sendRedirect("/index.html");
     }
 }
