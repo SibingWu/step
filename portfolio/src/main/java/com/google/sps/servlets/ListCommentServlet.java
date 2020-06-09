@@ -65,9 +65,4 @@ public class ListCommentServlet extends HttpServlet {
         response.setContentType("application/json;");
         response.getWriter().println(json);
     }
-
-    @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("doPost is called");
-    }
 }
