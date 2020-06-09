@@ -1,5 +1,6 @@
 package com.google.sps.servlets;
 
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import com.google.sps.utils.CommentDataStore;
@@ -17,6 +18,13 @@ import java.util.List;
 /** Servlet that handles posting list of comments. */
 @WebServlet("/list-comment")
 public class ListCommentServlet extends HttpServlet {
+
+    private CommentDataStore commentDataStore;
+
+    @Override
+    public void init() {
+        this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
+    }
 
     private static final String PARAM_NAME_QUANTITY = "quantity";
     private static final String DEFAULT_COMMENT_QUANTITY = "0";
@@ -40,7 +48,7 @@ public class ListCommentServlet extends HttpServlet {
     /** Loads the comment from Datastore */
     private List<Comment> getComments(int limit) {
         // Loads comments from Datastore
-        List<Comment> comments = CommentDataStore.COMMENT_OBJECT_DATA_STORE.load(limit);
+        List<Comment> comments = this.commentDataStore.load(limit);
 
         return comments;
     }
