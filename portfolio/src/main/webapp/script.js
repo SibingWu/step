@@ -86,7 +86,9 @@ function goBack() {
  * Fetches the response of "/data".
  */
 function loadAndShowComments() {
-    fetch("/list-comment?quantity=2").then(response => response.json()).then((json) => {
+    let maxNumberOfComments = document.getElementById("quantity").value;
+    const url = "/list-comment?quantity=" + maxNumberOfComments;
+    fetch(url).then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
