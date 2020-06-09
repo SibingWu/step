@@ -86,6 +86,8 @@ function goBack() {
  * Fetches the response of "/data".
  */
 function loadAndShowComments() {
+    document.getElementById("get-limit").submit();
+
     fetch("/list-comment").then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
         div.innerHTML = "";
