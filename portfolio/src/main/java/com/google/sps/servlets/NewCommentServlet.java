@@ -14,8 +14,9 @@
 
 package com.google.sps.servlets;
 
-import com.google.sps.data.Comment;
+import com.google.appengine.api.datastore.*;
 import com.google.sps.utils.CommentDataStore;
+import com.google.sps.data.Comment;
 import com.google.sps.utils.ServletUtils;
 
 import java.io.IOException;
@@ -27,6 +28,13 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that handles posting new comment. */
 @WebServlet("/comment")
 public final class NewCommentServlet extends HttpServlet {
+
+  private CommentDataStore commentDataStore;
+
+  @Override
+  public void init() {
+    this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
+  }
 
   static class Constants {
     private final static String PARAM_NAME_COMMENTER = "commenter";
@@ -56,6 +64,6 @@ public final class NewCommentServlet extends HttpServlet {
     Comment comment = new Comment(commenter, content, timestamp);
 
     // Stores the comment as an entity into Datastore
-    CommentDataStore.COMMENT_OBJECT_DATA_STORE.store(comment);
+    this.commentDataStore.store(comment);
   }
 }

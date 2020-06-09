@@ -5,9 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 /** Auxiliary functions and variables to support comment feature. */
 public class ServletUtils {
     // Makes it non-initializable
-    private ServletUtils() {
-
-    }
+    private ServletUtils() {}
 
     /**
      * @return the value of parameter with the {@code name} in the {@code request}
