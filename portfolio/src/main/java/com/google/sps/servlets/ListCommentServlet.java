@@ -1,36 +1,41 @@
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
+import com.google.sps.utils.CommentDataStore;
+import com.google.sps.utils.ServletUtils;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.sps.utils.Constants.COMMENT_KIND;
-import static com.google.sps.utils.Constants.COMMENT_MAXNUMBER;
-import static com.google.sps.utils.Constants.COMMENT_TIMESTAMP;
-
-
-/** Servlet that handles posting comment content. */
+/** Servlet that handles posting list of comments. */
 @WebServlet("/list-comment")
-public class ListCommentServlet extends CommentServlet {
-    private int maxNumberOfComments;
+public class ListCommentServlet extends HttpServlet {
+
+    private CommentDataStore commentDataStore;
 
     @Override
     public void init() {
-        this.maxNumberOfComments = 0; // default value
+        this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
     }
+
+    private static final String PARAM_NAME_QUANTITY = "quantity";
+    private static final int DEFAULT_COMMENT_QUANTITY = 0;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // Gets the displayed comment limit
+        int limit = ServletUtils.getIntParameter(request, PARAM_NAME_QUANTITY, DEFAULT_COMMENT_QUANTITY);
+        // TODO: parameter validation
+
         // Loads the comment from Datastore
-        List<Comment> comments = getComments(request);
+        List<Comment> comments = getComments(limit);
 
         // Converts into json form
         String json = convertToJsonUsingGson(comments);
@@ -40,22 +45,9 @@ public class ListCommentServlet extends CommentServlet {
     }
 
     /** Loads the comment from Datastore */
-    private List<Comment> getComments(HttpServletRequest request) {
-        Query query = new Query(COMMENT_KIND).addSort(COMMENT_TIMESTAMP, Query.SortDirection.DESCENDING);
-
-        DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-        PreparedQuery results = datastoreService.prepare(query);
-
-        List<Comment> comments = new ArrayList<>();
-        for (Entity entity: results.asIterable()) {
-            if (comments.size() >= this.maxNumberOfComments) {
-                break;
-            }
-
-            // Loads comments from Datastore
-            Comment comment = Comment.CREATOR.fromEntity(entity);
-            comments.add(comment);
-        }
+    private List<Comment> getComments(int limit) {
+        // Loads comments from Datastore
+        List<Comment> comments = this.commentDataStore.load(limit);
 
         return comments;
     }
@@ -71,26 +63,5 @@ public class ListCommentServlet extends CommentServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
-        this.maxNumberOfComments = 0;
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String maxNumOfCommentStr = getParameter(request, /*name=*/COMMENT_MAXNUMBER, /*defaultValue=*/"10");
-
-        try {
-            this.maxNumberOfComments = Integer.parseInt(maxNumOfCommentStr);
-
-            if (this.maxNumberOfComments < 1 || this.maxNumberOfComments > 10) {
-                response.setContentType("text/html;");
-                response.getWriter().println("Please enter an integer between 1 and 10.");
-            }
-        } catch (NumberFormatException e) {
-            System.err.println("Could not convert to int: " + maxNumOfCommentStr);
-            response.setContentType("text/html;");
-            response.getWriter().println("Please enter an integer between 1 and 10.");
-        }
-
-        response.sendRedirect("/comments.html");
     }
 }

@@ -15,26 +15,39 @@
 package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.*;
+import com.google.sps.utils.CommentDataStore;
 import com.google.sps.data.Comment;
+import com.google.sps.utils.ServletUtils;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static com.google.sps.utils.Constants.COMMENT_COMMENTER;
-import static com.google.sps.utils.Constants.COMMENT_CONTENT;
-import static com.google.sps.utils.Constants.COMMENT_KIND;
-
-/** Servlet that handles getting comment content. */
+/** Servlet that handles posting new comment. */
 @WebServlet("/comment")
-public final class NewCommentServlet extends CommentServlet {
+public final class NewCommentServlet extends HttpServlet {
+
+  private CommentDataStore commentDataStore;
+
+  @Override
+  public void init() {
+    this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
+  }
+
+  private final static String PARAM_NAME_COMMENTER = "commenter";
+  private final static String PARAM_NAME_CONTENT = "content";
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Gets comments from the form
-    String commenter = getParameter(request, /*name=*/COMMENT_COMMENTER, /*defaultValue=*/"");
-    String content = getParameter(request, /*name=*/COMMENT_CONTENT, /*defaultValue=*/"No comments");
+    String commenter = ServletUtils.getParameter(
+            request, PARAM_NAME_COMMENTER, /*defaultValue=*/"");
+    String content = ServletUtils.getParameter(
+            request, PARAM_NAME_CONTENT, /*defaultValue=*/"No comments");
     // TODO: validate request parameters
+    // TODO: why keep submitting No comments
 
     // Stores the comment into the Datastore
     storeComment(commenter, content);
@@ -45,12 +58,11 @@ public final class NewCommentServlet extends CommentServlet {
 
   /** Stores the comment into the Datastore */
   private void storeComment(String commenter, String content) {
-    // create a miscellaneous comment object to convert it to entity
+    // Creates a miscellaneous comment object to convert it to entity
     long timestamp = System.currentTimeMillis();
-    Comment comment = new Comment(0, commenter, content, timestamp);
+    Comment comment = new Comment(commenter, content, timestamp);
 
-    // put the entity into Datastore
-    DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-    datastoreService.put(comment.toEntity(COMMENT_KIND));
+    // Stores the comment as an entity into Datastore
+    this.commentDataStore.store(comment);
   }
 }

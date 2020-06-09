@@ -1,8 +1,13 @@
 /**
- * Fetches the response of "/data".
+ * Fetches the response of "/comment".
  */
 function loadAndShowComments() {
-    fetch("/list-comment").then(response => response.json()).then((json) => {
+    let maxNumberOfComments = document.getElementById("quantity").value;
+    if (maxNumberOfComments.length == 0) {
+        maxNumberOfComments = 0;
+    }
+    let url = "/list-comment?quantity=" + maxNumberOfComments;
+    fetch(url, {method: "GET"}).then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
@@ -21,7 +26,7 @@ function createListElement(text) {
 }
 
 /**
- * Gets a human readable string from a comment json.
+ * Get a human readable string from a comment json.
  * @param {json} json Comment object in json form.
  * @return {string} A formatted string.
  */

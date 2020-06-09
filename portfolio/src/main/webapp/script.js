@@ -76,7 +76,7 @@ function getRandomFact(facts, currentFact) {
 function goBack() {
     // If this is the first page.
     if(history.length === 1){
-        window.location = "index.html"
+        window.location = "index.html";
     } else {
         history.back();
     }
