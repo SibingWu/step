@@ -52,7 +52,7 @@ public class ListCommentServlet extends HttpServlet {
             response.setContentType("text/html;");
             response.getWriter().println("Please enter an integer between 1 and 10.");
 
-            return limit;
+            return 0;
         }
 
         return limit;
