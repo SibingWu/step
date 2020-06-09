@@ -1,8 +1,6 @@
 package com.google.sps.utils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /** Auxiliary functions and variables to support comment feature. */
 public class ServletUtils {
@@ -29,8 +27,7 @@ public class ServletUtils {
      * @return Parsed integer or -1.
      */
     public static int getIntParameter(HttpServletRequest request, String parameterName, String defaultValue) {
-        String maxNumOfCommentStr = ServletUtils.getParameter(
-                request, parameterName, defaultValue);
+        String maxNumOfCommentStr = ServletUtils.getParameter(request, parameterName, defaultValue);
 
         int result = -1;
 

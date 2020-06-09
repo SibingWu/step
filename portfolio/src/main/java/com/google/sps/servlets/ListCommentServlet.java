@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.List;
 
-
 /** Servlet that handles posting list of comments. */
 @WebServlet("/list-comment")
 public class ListCommentServlet extends HttpServlet {
