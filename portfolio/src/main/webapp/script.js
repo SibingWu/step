@@ -16,15 +16,15 @@
  * Adds a random greeting to the page.
  */
 function addRandomGreeting() {
-  const greetings =
+    const greetings =
       ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+    // Pick a random greeting.
+    const greeting = greetings[Math.floor(Math.random() * greetings.length)];
 
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+    // Add it to the page.
+    const greetingContainer = document.getElementById('greeting-container');
+    greetingContainer.innerText = greeting;
 }
 
 /**
@@ -99,9 +99,9 @@ function loadAndShowData() {
 
 /** Creates an <li> element containing text. */
 function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
+    const liElement = document.createElement('li');
+    liElement.innerText = text;
+    return liElement;
 }
 
 /**
@@ -110,18 +110,22 @@ function createListElement(text) {
  * @return {string} A formatted string.
  */
 function getFormattedComment(json) {
-    let name = json.name;
-    let comment = json.comment;
+    let commenter = json.commenter;
+    let content = json.content;
+    let timestamp = json.timestamp;
 
-    let year = json.time.date.year;
-    let month = json.time.date.month;
-    let day = json.time.date.day;
+    let timeString = getFormattedDate(timestamp);
 
-    let hour = json.time.time.hour;
-    let minute = json.time.time.minute;
-    let second = json.time.time.second;
 
-    let resultString = `Name: ${name}\nTime: ${year}/${month}/${day} ${hour}:${minute}:${second}\nComment: ${comment}`;
+    let resultString = `Commenter: ${commenter}\nTime: ${timeString}\nComment: ${content}`;
 
     return resultString;
+}
+
+function getFormattedDate(timestamp) {
+    let date = new Date(timestamp);
+
+    let timeString = date.toLocaleString();
+
+    return timeString;
 }

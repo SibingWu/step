@@ -14,11 +14,12 @@
 
 package com.google.sps.servlets;
 
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.*;
+import com.google.appengine.repackaged.com.google.datastore.v1.Datastore;
 import com.google.gson.Gson;
+import com.google.sps.utils.CommentDataStore;
 import com.google.sps.data.Comment;
+import com.google.sps.utils.ServletUtils;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -26,66 +27,82 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /** Servlet that handles getting and posting comment content. */
 @WebServlet("/comment")
 public final class CommentServlet extends HttpServlet {
-  private final List<Comment> comments = new ArrayList<>();
+
+  private CommentDataStore commentDataStore;
+
+  @Override
+  public void init() {
+    this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
+  }
+
+  static class Constants {
+    private final static String PARAM_NAME_COMMENTER = "commenter";
+    private final static String PARAM_NAME_CONTENT = "content";
+  }
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String json = convertToJsonUsingGson(this.comments);
+    // Loads the comment from Datastore
+    List<Comment> comments = getComments();
 
-    // Send the JSON as the response
-    response.setContentType("application/json;");
-    response.getWriter().println(json);
+    // Converts into json form
+    String json = convertToJsonUsingGson(comments);
+
+    // Sends the JSON as the response
+    sendJsonResponse(response, json);
   }
 
+  /** Loads the comment from Datastore */
+  private List<Comment> getComments() {
+    // Loads comments from Datastore
+    List<Comment> comments = this.commentDataStore.load();
+
+    return comments;
+  }
+
+
+  /** Converts the list of Comment objecct into json form */
   private String convertToJsonUsingGson(List<Comment> comments) {
     Gson gson = new Gson();
     String json = gson.toJson(comments);
     return json;
   }
 
+  /** Sends the JSON as response */
+  private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
+    response.setContentType("application/json;");
+    response.getWriter().println(json);
+  }
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Get comments from the form
-    String commenter = getParameter(request, /*name=*/"commenter", /*defaultValue=*/"");
-    String content = getParameter(request, /*name=*/"content", /*defaultValue=*/"No comments");
-    long timestamp = System.currentTimeMillis();
+    // Gets comments from the form
+    String commenter = ServletUtils.getParameter(
+            request, /*name=*/Constants.PARAM_NAME_COMMENTER, /*defaultValue=*/"");
+    String content = ServletUtils.getParameter(
+            request, /*name=*/Constants.PARAM_NAME_CONTENT, /*defaultValue=*/"No comments");
     // TODO: validate request parameters
 
-    // Modify the state of server.
-    addComment(commenter, content);
+    // Stores the comment into the Datastore
+    storeComment(commenter, content);
 
-    Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("commenter", commenter);
-    commentEntity.setProperty("content", content);
-    commentEntity.setProperty("timestamp", timestamp);
-
-    DatastoreService datastoreService = DatastoreServiceFactory.getDatastoreService();
-    datastoreService.put(commentEntity);
-
-    // Redirect back to the HTML page.
+    // Redirects back to the HTML page.
     response.sendRedirect("/index.html");
   }
 
-  private void addComment(String name, String comment) {
-    comments.add(new Comment(name, comment, LocalDateTime.now()));
-  }
+  /** Stores the comment into the Datastore */
+  private void storeComment(String commenter, String content) {
+    // Creates a miscellaneous comment object to convert it to entity
+    long timestamp = System.currentTimeMillis();
+    Comment comment = new Comment(commenter, content, timestamp);
 
-  /**
-   * @return the value of parameter with the {@code name} in the {@code request}
-   *         or returns {@code defaultValue} if that parameter does not exist.
-   */
-  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
-    String value = request.getParameter(name);
-    if (value == null) {
-      return defaultValue;
-    }
-    return value;
+    // Stores the comment as an entity into Datastore
+    this.commentDataStore.store(comment);
   }
 }
