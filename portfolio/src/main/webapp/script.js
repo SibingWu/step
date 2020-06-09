@@ -92,7 +92,7 @@ function loadAndShowComments() {
     }
     let url = "/list-comment?quantity=" + maxNumberOfComments;
     console.log(url);
-    fetch(url).then(response => response.json()).then((json) => {
+    fetch(url, {method: "GET"}).then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
