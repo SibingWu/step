@@ -90,8 +90,7 @@ function loadAndShowComments() {
     if (maxNumberOfComments.length == 0) {
         return;
     }
-    let url = "/list-comment?quantity=" + maxNumberOfComments;
-    console.log(url);
+    let url = "/list-comment?quantity=" + maxNumberOfComments;ss
     fetch(url, {method: "GET"}).then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
         div.innerHTML = "";
@@ -101,7 +100,6 @@ function loadAndShowComments() {
             div.appendChild(createListElement(commentString));
         }
     });
-    window.location = "index.html";
 }
 
 /** Creates an <li> element containing text. */

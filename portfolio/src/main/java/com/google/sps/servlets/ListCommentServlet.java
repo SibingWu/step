@@ -30,7 +30,6 @@ public class ListCommentServlet extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.printf("doGet is called");
         // Gets the displayed comment limit
         int limit = ServletUtils.getIntParameter(request, PARAM_NAME_QUANTITY, DEFAULT_COMMENT_QUANTITY);
         // TODO: parameter validation
