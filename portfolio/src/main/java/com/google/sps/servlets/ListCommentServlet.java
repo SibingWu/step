@@ -14,16 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 
-/** Servlet that handles posting comment content. */
+/** Servlet that handles posting list of comments. */
 @WebServlet("/list-comment")
 public class ListCommentServlet extends HttpServlet {
 
     private static final String PARAM_NAME_QUANTITY = "quantity";
+    private static final String DEFAULT_COMMENT_QUANTITY = "0";
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Gets the displayed comment limit
-        int limit = getMaxNumberOfComments(request, response);
+        int limit = ServletUtils.getIntParameter(request, PARAM_NAME_QUANTITY, DEFAULT_COMMENT_QUANTITY);
+        // TODO: parameter validation
 
         // Loads the comment from Datastore
         List<Comment> comments = getComments(limit);
@@ -33,29 +35,6 @@ public class ListCommentServlet extends HttpServlet {
 
         // Sends the JSON as the response
         sendJsonResponse(response, json);
-    }
-
-    private int getMaxNumberOfComments(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String maxNumOfCommentStr = ServletUtils.getParameter(
-                request, /*name=*/PARAM_NAME_QUANTITY, /*defaultValue=*/"0");
-
-        int limit = 0;
-
-        try {
-            limit = Integer.parseInt(maxNumOfCommentStr);
-
-            if (limit < 1 || limit > 10) {
-                return 0;
-            }
-        } catch (NumberFormatException e) {
-            System.err.println("Could not convert to int: " + maxNumOfCommentStr);
-            response.setContentType("text/html;");
-            response.getWriter().println("Please enter an integer between 1 and 10.");
-
-            return 0;
-        }
-
-        return limit;
     }
 
     /** Loads the comment from Datastore */

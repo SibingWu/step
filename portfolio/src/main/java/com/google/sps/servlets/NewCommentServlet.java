@@ -36,18 +36,16 @@ public final class NewCommentServlet extends HttpServlet {
     this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
   }
 
-  static class Constants {
-    private final static String PARAM_NAME_COMMENTER = "commenter";
-    private final static String PARAM_NAME_CONTENT = "content";
-  }
+  private final static String PARAM_NAME_COMMENTER = "commenter";
+  private final static String PARAM_NAME_CONTENT = "content";
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Gets comments from the form
     String commenter = ServletUtils.getParameter(
-            request, /*name=*/Constants.PARAM_NAME_COMMENTER, /*defaultValue=*/"");
+            request, PARAM_NAME_COMMENTER, /*defaultValue=*/"");
     String content = ServletUtils.getParameter(
-            request, /*name=*/Constants.PARAM_NAME_CONTENT, /*defaultValue=*/"No comments");
+            request, PARAM_NAME_CONTENT, /*defaultValue=*/"No comments");
     // TODO: validate request parameters
 
     // Stores the comment into the Datastore
