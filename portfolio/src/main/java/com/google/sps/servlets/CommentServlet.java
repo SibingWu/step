@@ -15,6 +15,7 @@
 package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.repackaged.com.google.datastore.v1.Datastore;
 import com.google.gson.Gson;
 import com.google.sps.utils.CommentDataStore;
 import com.google.sps.data.Comment;
@@ -32,6 +33,13 @@ import java.util.List;
 /** Servlet that handles getting and posting comment content. */
 @WebServlet("/comment")
 public final class CommentServlet extends HttpServlet {
+
+  private CommentDataStore commentDataStore;
+
+  @Override
+  public void init() {
+    this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
+  }
 
   static class Constants {
     private final static String PARAM_NAME_COMMENTER = "commenter";
@@ -53,7 +61,7 @@ public final class CommentServlet extends HttpServlet {
   /** Loads the comment from Datastore */
   private List<Comment> getComments() {
     // Loads comments from Datastore
-    List<Comment> comments = CommentDataStore.COMMENT_OBJECT_DATA_STORE.load();
+    List<Comment> comments = this.commentDataStore.load();
 
     return comments;
   }
@@ -95,6 +103,6 @@ public final class CommentServlet extends HttpServlet {
     Comment comment = new Comment(commenter, content, timestamp);
 
     // Stores the comment as an entity into Datastore
-    CommentDataStore.COMMENT_OBJECT_DATA_STORE.store(comment);
+    this.commentDataStore.store(comment);
   }
 }
