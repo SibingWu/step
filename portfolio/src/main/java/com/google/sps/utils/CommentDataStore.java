@@ -20,7 +20,7 @@ public class CommentDataStore implements ObjectDataStore<Comment> {
     }
 
     /**
-     * Puts the entity into Datastore.
+     * Puts the comments into Datastore.
      * @param comment Comment object needed to be stored.
      */
     @Override
@@ -29,7 +29,7 @@ public class CommentDataStore implements ObjectDataStore<Comment> {
     }
 
     /**
-     * Loads the entity from Datastore.
+     * Loads the comments from Datastore.
      * @return An Iterable.
      */
     @Override
