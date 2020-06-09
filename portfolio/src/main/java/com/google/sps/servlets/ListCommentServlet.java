@@ -63,6 +63,5 @@ public class ListCommentServlet extends HttpServlet {
     private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
         response.setContentType("application/json;");
         response.getWriter().println(json);
-        response.sendRedirect("/index.html");
     }
 }

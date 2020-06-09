@@ -2,6 +2,7 @@ package com.google.sps.utils;
 
 import com.google.appengine.api.datastore.*;
 import com.google.sps.data.Comment;
+import com.google.sps.data.EntityConvertible;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +10,8 @@ import java.util.List;
 /** Provides the service to interact with Datastore to store or load comment. */
 public class CommentDataStore implements ObjectDataStore<Comment> {
 
-    private final static String KIND = "Comment";
-    private final static String TIMESTAMP = "timestamp";
+    private static final String KIND = "Comment";
+    private static final String TIMESTAMP = "timestamp";
 
     private DatastoreService datastoreService;
 
@@ -36,13 +37,10 @@ public class CommentDataStore implements ObjectDataStore<Comment> {
 
         Query query = new Query(KIND).addSort(TIMESTAMP, Query.SortDirection.DESCENDING);
         PreparedQuery results = this.datastoreService.prepare(query);
+        Iterable<Entity> resultsIterable = results.asIterable(FetchOptions.Builder.withLimit(limit));
 
         List<Comment> comments = new ArrayList<>();
-        for (Entity entity: results.asIterable()) {
-            if (comments.size() >= limit) {
-                break;
-            }
-
+        for (Entity entity: resultsIterable) {
             Comment comment = Comment.CREATOR.fromEntity(entity);
             comments.add(comment);
         }
