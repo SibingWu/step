@@ -87,6 +87,9 @@ function goBack() {
  */
 function loadAndShowComments() {
     let maxNumberOfComments = document.getElementById("quantity").value;
+    if (maxNumberOfComments.length == 0) {
+        maxNumberOfComments = 0;
+    }
     const url = "/list-comment?quantity=" + maxNumberOfComments;
     fetch(url).then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
