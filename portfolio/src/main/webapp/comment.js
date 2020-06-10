@@ -63,11 +63,17 @@ function getFormattedDate(timestamp) {
 function createCommentElement(comment, commentString) {
   const commentElement = document.createElement("li");
   commentElement.className = "comment";
+  style=
 
   const contentElement = document.createElement("span");
   contentElement.innerText = commentString;
 
   const deleteButtonElement = document.createElement('button');
+
+  let style = document.createAttribute("style");
+  style.value = "width:auto; height:auto;";
+  deleteButtonElement.setAttributeNode(style);
+
   deleteButtonElement.innerText = "Delete this comment from database";
   deleteButtonElement.addEventListener("click", () => {
     deleteComment(comment);
