@@ -35,6 +35,7 @@ public class ServletUtils {
             result = Integer.parseInt(maxNumOfCommentStr);
         } catch (NumberFormatException e) {
             System.err.println("Could not convert to int: " + maxNumOfCommentStr);
+            // TODO: add logging to log the error
 
             return result;
         }

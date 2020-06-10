@@ -14,7 +14,7 @@ public interface ObjectDataStore<T> {
 
     /**
      * Loads the object from Datastore.
-     * @param limit Upper limit of objects in the list.
+     * @param limit Upper limit of number of objects.
      * @return An list of objects.
      */
     public List<T> load(int limit);

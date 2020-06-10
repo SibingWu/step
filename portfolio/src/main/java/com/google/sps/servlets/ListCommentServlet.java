@@ -14,9 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.util.List;
 
-/** Servlet that handles posting list of comments. */
+/** Servlet that handles getting list of comments. */
 @WebServlet("/list-comment")
 public class ListCommentServlet extends HttpServlet {
+    private static final String PARAM_NAME_QUANTITY = "quantity";
+    private static final int DEFAULT_COMMENT_QUANTITY = 0;
 
     private CommentDataStore commentDataStore;
 
@@ -24,9 +26,6 @@ public class ListCommentServlet extends HttpServlet {
     public void init() {
         this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
     }
-
-    private static final String PARAM_NAME_QUANTITY = "quantity";
-    private static final int DEFAULT_COMMENT_QUANTITY = 0;
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

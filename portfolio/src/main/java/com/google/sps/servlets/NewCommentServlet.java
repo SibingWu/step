@@ -29,6 +29,11 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comment")
 public final class NewCommentServlet extends HttpServlet {
 
+  private final static String PARAM_NAME_COMMENTER = "commenter";
+  private final static String PARAM_NAME_CONTENT = "content";
+  private static final String DEFAULT_COMMENT_COMMENTER = "";
+  private static final String DEFAULT_COMMENT_CONTENT = "No comments";
+
   private CommentDataStore commentDataStore;
 
   @Override
@@ -36,16 +41,11 @@ public final class NewCommentServlet extends HttpServlet {
     this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
   }
 
-  private final static String PARAM_NAME_COMMENTER = "commenter";
-  private final static String PARAM_NAME_CONTENT = "content";
-
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Gets comments from the form
-    String commenter = ServletUtils.getParameter(
-            request, PARAM_NAME_COMMENTER, /*defaultValue=*/"");
-    String content = ServletUtils.getParameter(
-            request, PARAM_NAME_CONTENT, /*defaultValue=*/"No comments");
+    String commenter = ServletUtils.getParameter(request, PARAM_NAME_COMMENTER, DEFAULT_COMMENT_COMMENTER);
+    String content = ServletUtils.getParameter(request, PARAM_NAME_CONTENT, DEFAULT_COMMENT_CONTENT);
     // TODO: validate request parameters
     // TODO: why keep submitting No comments
 
