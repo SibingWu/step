@@ -18,4 +18,11 @@ public interface ObjectDataStore<T> {
      * @return An immutable list of objects.
      */
     public ImmutableList<T> load(int limit);
+
+    /**
+     * Deletes a specific object in Datastore.
+     * @param kind Entity kind name.
+     * @param id Target entity id.
+     */
+    public void delete(String kind, long id);
 }

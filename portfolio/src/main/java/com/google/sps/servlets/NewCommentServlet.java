@@ -47,7 +47,6 @@ public final class NewCommentServlet extends HttpServlet {
     String commenter = ServletUtils.getParameter(request, PARAM_NAME_COMMENTER, DEFAULT_COMMENT_COMMENTER);
     String content = ServletUtils.getParameter(request, PARAM_NAME_CONTENT, DEFAULT_COMMENT_CONTENT);
     // TODO: validate request parameters
-    // TODO: why keep submitting No comments
 
     // Stores the comment into the Datastore
     storeComment(commenter, content);

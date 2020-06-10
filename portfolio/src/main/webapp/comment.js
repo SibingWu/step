@@ -12,18 +12,19 @@ function loadAndShowComments() {
         div.innerHTML = "";
 
         for (let i = 0; i < json.length; i++) {
-            let commentString = getFormattedComment(json[i]);
-            div.appendChild(createListElement(commentString));
+            let comment = json[i];
+            let commentString = getFormattedComment(comment);
+            div.appendChild(createCommentElement(comment, commentString));
         }
     });
 }
 
 /** Creates an <li> element containing text. */
-function createListElement(text) {
-    const liElement = document.createElement('li');
-    liElement.innerText = text;
-    return liElement;
-}
+//function createListElement(text) {
+//    const liElement = document.createElement('li');
+//    liElement.innerText = text;
+//    return liElement;
+//}
 
 /**
  * Get a human readable string from a comment json.
@@ -54,9 +55,38 @@ function getFormattedDate(timestamp) {
     return timeString;
 }
 
-/** Tells the server to delete the task. */
-function deleteTask(task) {
+/**
+ * Creates an element that represents a comment, including its delete button.
+ * @param {json} comment Comment object in json form.
+ * @param {string} A formatted comment string.
+ */
+function createCommentElement(comment, commentString) {
+  const commentElement = document.createElement("li");
+  commentElement.className = "comment";
+
+  const contentElement = document.createElement("span");
+  contentElement.innerText = commentString;
+
+  const deleteButtonElement = document.createElement('button');
+  deleteButtonElement.innerText = "Delete this comment from database";
+  deleteButtonElement.addEventListener("click", () => {
+    deleteComment(comment);
+
+    // Remove the comment from the DOM.
+    commentElement.remove();
+  });
+
+  commentElement.appendChild(contentElement);
+  commentElement.appendChild(deleteButtonElement);
+  return commentElement;
+}
+
+/**
+ * Tells the server to delete the comment.
+ * @param {json} comment Comment object in json form.
+ */
+function deleteComment(comment) {
   const params = new URLSearchParams();
-  params.append('id', task.id);
-  fetch('/delete-task', {method: 'POST', body: params});
+  params.append("id", comment.id);
+  fetch('/delete-comment', {method: "POST", body: params});
 }

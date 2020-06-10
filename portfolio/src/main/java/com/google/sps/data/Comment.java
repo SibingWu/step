@@ -4,11 +4,13 @@ import com.google.appengine.api.datastore.Entity;
 
 /** Represents a comment with related details. */
 public final class Comment implements EntityConvertible {
+    private final long id;
     private final String commenter;
     private final String content;
     private final long timestamp;
 
-    public Comment(String commenter, String content, long timestamp) {
+    public Comment(long id, String commenter, String content, long timestamp) {
+        this.id = id;
         this.commenter = commenter;
         this.content = content;
         this.timestamp = timestamp;
@@ -31,11 +33,12 @@ public final class Comment implements EntityConvertible {
 
     public static final EntityConvertibleCreator<Comment> CREATOR
             = entity -> {
+                long id = entity.getKey().getId();
                 String commenter = (String) entity.getProperty(PROPERTY_NAME_COMMENTER);
                 String content = (String) entity.getProperty(PROPERTY_NAME_CONTENT);
                 long timestamp = (long) entity.getProperty(PROPERTY_NAME_TIMESTAMP);
 
-                Comment comment = new Comment(commenter, content, timestamp);
+                Comment comment = new Comment(id, commenter, content, timestamp);
                 return comment;
             };
 }

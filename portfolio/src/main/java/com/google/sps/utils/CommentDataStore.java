@@ -41,4 +41,15 @@ public final class CommentDataStore implements ObjectDataStore<Comment> {
         }
         return comments.build();
     }
+
+    /**
+     * Deletes a specific comment in Datastore.
+     * @param kind Comment entity kind name.
+     * @param id Target comment entity id.
+     */
+    @Override
+    public void delete(String kind, long id) {
+        Key taskEntityKey = KeyFactory.createKey(kind, id);
+        this.datastoreService.delete(taskEntityKey);
+    }
 }
