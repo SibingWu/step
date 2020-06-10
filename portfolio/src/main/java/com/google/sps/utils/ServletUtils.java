@@ -30,7 +30,13 @@ public class ServletUtils {
         String resultStr = request.getParameter(parameterName);
 
         try {
-            return Integer.parseInt(resultStr);
+            int result = Integer.parseInt(resultStr);
+
+            if (result < 0 || result > 10) {
+                throw new NumberFormatException("Please enter an integer between 1 and 10.");
+            }
+
+            return result;
         } catch (NumberFormatException e) {
             System.err.println("Could not convert to int: " + resultStr);
             // TODO: add logging to log the error
