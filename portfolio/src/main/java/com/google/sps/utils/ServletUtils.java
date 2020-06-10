@@ -27,19 +27,21 @@ public class ServletUtils {
      * @return Parsed integer or default value if exception occur
      */
     public static int getIntParameter(HttpServletRequest request, String parameterName, int defaultValue) {
-        String maxNumOfCommentStr = request.getParameter(parameterName);
-
-        int result = defaultValue;
+        String resultStr = request.getParameter(parameterName);
 
         try {
-            result = Integer.parseInt(maxNumOfCommentStr);
-        } catch (NumberFormatException e) {
-            System.err.println("Could not convert to int: " + maxNumOfCommentStr);
-            // TODO: add logging to log the error
+            int result = Integer.parseInt(resultStr);
+
+            if (result < 0 || result > 10) {
+                throw new NumberFormatException("Please enter an integer between 1 and 10.");
+            }
 
             return result;
-        }
+        } catch (NumberFormatException e) {
+            System.err.println("Could not convert to int: " + resultStr);
+            // TODO: add logging to log the error
 
-        return result;
+            return defaultValue;
+        }
     }
 }

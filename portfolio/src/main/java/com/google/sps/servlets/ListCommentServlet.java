@@ -16,7 +16,7 @@ import java.util.List;
 
 /** Servlet that handles getting list of comments. */
 @WebServlet("/list-comment")
-public class ListCommentServlet extends HttpServlet {
+public final class ListCommentServlet extends HttpServlet {
     private static final String PARAM_NAME_QUANTITY = "quantity";
     private static final int DEFAULT_COMMENT_QUANTITY = 0;
 
@@ -34,21 +34,13 @@ public class ListCommentServlet extends HttpServlet {
         // TODO: parameter validation
 
         // Loads the comment from Datastore
-        List<Comment> comments = getComments(limit);
+        List<Comment> comments = this.commentDataStore.load(limit);
 
         // Converts into json form
         String json = convertToJsonUsingGson(comments);
 
         // Sends the JSON as the response
         sendJsonResponse(response, json);
-    }
-
-    /** Loads the comment from Datastore */
-    private List<Comment> getComments(int limit) {
-        // Loads comments from Datastore
-        List<Comment> comments = this.commentDataStore.load(limit);
-
-        return comments;
     }
 
     /** Converts the list of Comment objecct into json form */
