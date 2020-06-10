@@ -38,6 +38,7 @@ public class ServletUtils {
 
             return result;
         } catch (NumberFormatException e) {
+            // TODO: error handling
             System.err.println("Could not convert to int: " + resultStr);
             // TODO: add logging to log the error
 
