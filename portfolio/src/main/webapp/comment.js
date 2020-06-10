@@ -68,10 +68,7 @@ function createCommentElement(comment, commentString) {
   contentElement.innerText = commentString;
 
   const deleteButtonElement = document.createElement('button');
-
-  let style = document.createAttribute("style");
-  style.value = "width:auto; height:auto;";
-  deleteButtonElement.setAttributeNode(style);
+  deleteButtonElement.className = "button";
 
   deleteButtonElement.innerText = "Delete this comment from database";
   deleteButtonElement.addEventListener("click", () => {
