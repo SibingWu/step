@@ -1,9 +1,9 @@
-package com.google.sps.servlets;
+package com.google.sps.comment.servlets;
 
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.gson.Gson;
-import com.google.sps.data.Comment;
-import com.google.sps.utils.CommentDataStore;
+import com.google.sps.comment.data.Comment;
+import com.google.sps.comment.data.CommentDataStore;
 import com.google.sps.utils.ServletUtils;
 
 import java.io.IOException;

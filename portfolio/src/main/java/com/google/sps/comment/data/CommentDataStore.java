@@ -1,8 +1,9 @@
-package com.google.sps.utils;
+package com.google.sps.comment.data;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
-import com.google.sps.data.Comment;
+import com.google.sps.comment.data.Comment;
+import com.google.sps.datastore.ObjectDataStore;
 
 /** Provides the service to interact with Datastore to store or load comment. */
 public final class CommentDataStore implements ObjectDataStore<Comment> {

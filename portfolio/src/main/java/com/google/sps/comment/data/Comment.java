@@ -1,6 +1,8 @@
-package com.google.sps.data;
+package com.google.sps.comment.data;
 
 import com.google.appengine.api.datastore.Entity;
+import com.google.sps.datastore.EntityConvertible;
+import com.google.sps.datastore.EntityConvertibleCreator;
 
 /** Represents a comment with related details. */
 public final class Comment implements EntityConvertible {
