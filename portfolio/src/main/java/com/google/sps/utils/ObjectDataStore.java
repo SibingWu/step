@@ -1,6 +1,6 @@
 package com.google.sps.utils;
 
-import java.util.List;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 
 /** Interface for classes whose instances can be written to and restored from Datastore.
  * Classes implementing the ObjectDataStore interface must also have a non-null static field called CREATOR of a type
@@ -15,7 +15,7 @@ public interface ObjectDataStore<T> {
     /**
      * Loads the object from Datastore.
      * @param limit Upper limit of number of objects.
-     * @return An list of objects.
+     * @return An immutable list of objects.
      */
-    public List<T> load(int limit);
+    public ImmutableList<T> load(int limit);
 }

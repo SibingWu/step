@@ -1,19 +1,16 @@
 package com.google.sps.utils;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 import com.google.sps.data.Comment;
-import com.google.sps.data.EntityConvertible;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /** Provides the service to interact with Datastore to store or load comment. */
-public class CommentDataStore implements ObjectDataStore<Comment> {
+public final class CommentDataStore implements ObjectDataStore<Comment> {
 
     private static final String KIND = "Comment";
     private static final String TIMESTAMP = "timestamp";
 
-    private DatastoreService datastoreService;
+    private final DatastoreService datastoreService;
 
     public CommentDataStore(DatastoreService datastoreService) {
         this.datastoreService = datastoreService;
@@ -30,21 +27,18 @@ public class CommentDataStore implements ObjectDataStore<Comment> {
 
     /**
      * Loads the comments from Datastore.
-     * @return An Iterable.
+     * @return An immutable list of comments.
      */
     @Override
-    public List<Comment> load(int limit) {
-
+    public ImmutableList<Comment> load(int limit) {
         Query query = new Query(KIND).addSort(TIMESTAMP, Query.SortDirection.DESCENDING);
         PreparedQuery results = this.datastoreService.prepare(query);
         Iterable<Entity> resultsIterable = results.asIterable(FetchOptions.Builder.withLimit(limit));
 
-        List<Comment> comments = new ArrayList<>();
-        for (Entity entity: resultsIterable) {
-            Comment comment = Comment.CREATOR.fromEntity(entity);
-            comments.add(comment);
+        ImmutableList.Builder<Comment> comments = ImmutableList.builder();
+        for( Entity entity: resultsIterable){
+            comments.add(Comment.CREATOR.fromEntity(entity));
         }
-
-        return comments;
+        return comments.build();
     }
 }

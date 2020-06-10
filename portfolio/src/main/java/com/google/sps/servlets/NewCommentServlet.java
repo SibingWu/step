@@ -31,7 +31,7 @@ public final class NewCommentServlet extends HttpServlet {
 
   private final static String PARAM_NAME_COMMENTER = "commenter";
   private final static String PARAM_NAME_CONTENT = "content";
-  private static final String DEFAULT_COMMENT_COMMENTER = "";
+  private static final String DEFAULT_COMMENT_COMMENTER = "Anonymous";
   private static final String DEFAULT_COMMENT_CONTENT = "No comments";
 
   private CommentDataStore commentDataStore;
