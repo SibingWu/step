@@ -63,7 +63,6 @@ function getFormattedDate(timestamp) {
 function createCommentElement(comment, commentString) {
   const commentElement = document.createElement("li");
   commentElement.className = "comment";
-  style=
 
   const contentElement = document.createElement("span");
   contentElement.innerText = commentString;
