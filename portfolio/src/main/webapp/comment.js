@@ -6,7 +6,7 @@ function getLoginStatus() {
     then(response => response.json()).then((json) => {
         let commentSection = document.getElementById("content");
         // Hides the comment section.
-        content.style.display = "none";
+        commentSection.style.display = "none";
 
         let isLoggedIn = json.isLoggedIn;
         let htmlText = json.htmlText;
