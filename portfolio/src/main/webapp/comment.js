@@ -5,7 +5,6 @@ function getLoginStatus() {
     fetch("/login", {headers: {"Content-Type": "application/json"}}).
     then(response => response.json()).then((json) => {
         let isLoggedIn = json.isLoggedIn;
-        console.log(typeof(isLoggedIn));
         let htmlText = json.htmlText;
 
         let commentSection = document.getElementById("cotent");
@@ -17,16 +16,19 @@ function getLoginStatus() {
             const loginDiv = document.createElement("div");
             let id = document.createAttribute("id");
             id.value = "login";
-            div.setAttributeNode(div);
-            div.innerHTML = htmlText;
+            loginDiv.setAttributeNode(loginDiv);
+            loginDiv.innerHTML = htmlText;
+
+            let body = document.getElementById("body");
+            body.appendChild(loginDiv);
         } else {
             const logoutDiv = document.createElement("div");
             let id = document.createAttribute("id");
             id.value = "logout";
-            div.setAttributeNode(div);
-            div.innerHTML = htmlText;
+            logoutDiv.setAttributeNode(div);
+            logoutDiv.innerHTML = htmlText;
 
-            commentSection.appendChild(div);
+            commentSection.appendChild(logoutDiv);
         }
     });
 }
