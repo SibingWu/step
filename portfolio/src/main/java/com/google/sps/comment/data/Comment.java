@@ -6,22 +6,20 @@ import com.google.sps.datastore.EntityConvertibleCreator;
 
 /** Represents a comment with related details. */
 public final class Comment implements EntityConvertible {
-    private final long id;
-    private final String commenter;
-    private final String content;
-    private final long timestamp;
-
-    public Comment(long id, String commenter, String content, long timestamp) {
-        this.id = id;
-        this.commenter = commenter;
-        this.content = content;
-        this.timestamp = timestamp;
-    }
-
     private static final String KIND = "Comment";
     private static final String PROPERTY_NAME_COMMENTER = "commenter";
     private static final String PROPERTY_NAME_CONTENT = "content";
     private static final String PROPERTY_NAME_TIMESTAMP = "timestamp";
+
+    private final String commenter;
+    private final String content;
+    private final long timestamp;
+
+    public Comment(String commenter, String content, long timestamp) {
+        this.commenter = commenter;
+        this.content = content;
+        this.timestamp = timestamp;
+    }
 
     @Override
     public Entity toEntity(String key) {
@@ -40,7 +38,7 @@ public final class Comment implements EntityConvertible {
                 String content = (String) entity.getProperty(PROPERTY_NAME_CONTENT);
                 long timestamp = (long) entity.getProperty(PROPERTY_NAME_TIMESTAMP);
 
-                Comment comment = new Comment(id, commenter, content, timestamp);
+                Comment comment = new Comment(commenter, content, timestamp);
                 return comment;
             };
 }
