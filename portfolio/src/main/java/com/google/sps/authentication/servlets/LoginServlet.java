@@ -39,13 +39,13 @@ public final class LoginServlet extends HttpServlet {
 
         if (isLoggedIn) {
             String userEmail = userService.getCurrentUser().getEmail();
-            String urlToRedirectToAfterUserLogsOut = "/login";
+            String urlToRedirectToAfterUserLogsOut = "/index.html";
             String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
 
             htmlText = String.format("<p>Hello %s!</p>\n"
                     + "<p>Logout <a href=\"%s\">here</a>.</p>", userEmail, logoutUrl);
         } else {
-            String urlToRedirectToAfterUserLogsIn = "/login";
+            String urlToRedirectToAfterUserLogsIn = "/comment.html";
             String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
 
             htmlText = String.format("<p>Hello stranger.</p>"
