@@ -12,12 +12,22 @@ public final class Comment implements EntityConvertible {
     private static final String PROPERTY_NAME_CONTENT = "content";
     private static final String PROPERTY_NAME_TIMESTAMP = "timestamp";
 
+    private final long id; // for json creation
     private final String commenter;
     private final String email;
     private final String content;
     private final long timestamp;
 
     public Comment(String commenter, String email, String content, long timestamp) {
+        this.id = 0;
+        this.commenter = commenter;
+        this.email = email;
+        this.content = content;
+        this.timestamp = timestamp;
+    }
+
+    public Comment(long id, String commenter, String email, String content, long timestamp) {
+        this.id = id;
         this.commenter = commenter;
         this.email = email;
         this.content = content;
@@ -37,12 +47,13 @@ public final class Comment implements EntityConvertible {
 
     public static final EntityConvertibleCreator<Comment> CREATOR
             = entity -> {
+                long id = entity.getKey().getId();
                 String commenter = (String) entity.getProperty(PROPERTY_NAME_COMMENTER);
                 String email = (String) entity.getProperty(PROPERTY_NAME_EMAIL);
                 String content = (String) entity.getProperty(PROPERTY_NAME_CONTENT);
                 long timestamp = (long) entity.getProperty(PROPERTY_NAME_TIMESTAMP);
 
-                Comment comment = new Comment(commenter, email, content, timestamp);
+                Comment comment = new Comment(id, commenter, email, content, timestamp);
                 return comment;
             };
 }
