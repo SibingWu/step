@@ -4,13 +4,14 @@
 function getLoginStatus() {
     fetch("/login", {headers: {"Content-Type": "application/json"}}).
     then(response => response.json()).then((json) => {
+        let commentSection = document.getElementById("content");
+        // Hides the comment section.
+        content.style.display = "none";
+
         let isLoggedIn = json.isLoggedIn;
         let htmlText = json.htmlText;
 
         if (!isLoggedIn) {
-            // Hides the comment section.
-            content.style.display = "none";
-
             const loginDiv = document.createElement("div");
             let id = document.createAttribute("id");
             id.value = "login";
@@ -26,8 +27,8 @@ function getLoginStatus() {
             logoutDiv.setAttributeNode(id);
             logoutDiv.innerHTML = htmlText;
 
-            let commentSection = document.getElementById("content");
             commentSection.appendChild(logoutDiv);
+            commentSection.style.display = "block";
         }
     });
 }
