@@ -1,10 +1,17 @@
+/**
+ * Gets the log in status from "/login".
+ */
 function getLoginStatus() {
-    fetch("/login", {headers: {"Content-Type": "text/plain"}}).
-    then(response => response.text()).then((text) => {
-//        if (text == "false") { // not logged in
-//
-//        }
-        console.log(text);
+    fetch("/login", {headers: {"Content-Type": "application/json"}}).
+    then(response => response.json()).then((json) => {
+        let isLoggedIn = json.isLoggedIn;
+        let htmlText = json.htmlText;
+
+        const div = document.createElement("div");
+        let id = document.createAttribute("id");
+        id.value = "login";
+        div.setAttributeNode(div);
+        div.innerHTML = htmlText;
     });
 }
 
@@ -64,26 +71,26 @@ function getFormattedDate(timestamp) {
  * @param {string} A formatted comment string.
  */
 function createCommentElement(comment, commentString) {
-  const commentElement = document.createElement("li");
-  commentElement.className = "comment";
+    const commentElement = document.createElement("li");
+    commentElement.className = "comment";
 
-  const contentElement = document.createElement("span");
-  contentElement.innerText = commentString;
+    const contentElement = document.createElement("span");
+    contentElement.innerText = commentString;
 
-  const deleteButtonElement = document.createElement('button');
-  deleteButtonElement.className = "button";
+    const deleteButtonElement = document.createElement('button');
+    deleteButtonElement.className = "button";
 
-  deleteButtonElement.innerText = "Delete this comment from database";
-  deleteButtonElement.addEventListener("click", () => {
+    deleteButtonElement.innerText = "Delete this comment from database";
+    deleteButtonElement.addEventListener("click", () => {
     deleteComment(comment);
 
     // Remove the comment from the DOM.
     commentElement.remove();
-  });
+    });
 
-  commentElement.appendChild(contentElement);
-  commentElement.appendChild(deleteButtonElement);
-  return commentElement;
+    commentElement.appendChild(contentElement);
+    commentElement.appendChild(deleteButtonElement);
+    return commentElement;
 }
 
 /**
@@ -91,7 +98,7 @@ function createCommentElement(comment, commentString) {
  * @param {json} comment Comment object in json form.
  */
 function deleteComment(comment) {
-  const params = new URLSearchParams();
-  params.append("id", comment.id);
-  fetch('/delete-comment', {method: "POST", body: params});
+    const params = new URLSearchParams();
+    params.append("id", comment.id);
+    fetch('/delete-comment', {method: "POST", body: params});
 }
