@@ -51,11 +51,17 @@
         <label for="commenter">Commenter Name</label>
         <input type="text" id="commenter" name="commenter"><br>
         <label for="content">Comment</label><br>
-        <input type="text" id="contentText" name="content" size="50"><br>
+        <input type="text" id="contentText" name="content" size="50" required><br>
         <input type="submit" value="Submit Your Comment">
       </form>
 
-      <button onclick="loadAndShowData()">Show Comments</button>
+      <form action="/list-comment" method="get">
+        <label for="quantity">Please select the number of comments you want to show (between 1 and 10):</label>
+        <input type="number" id="quantity" name="quantity" min="1" max="10">
+
+        <input type="button" value="Submit Your Choice" onclick="loadAndShowComments()">
+      </form>
+
       <div id="comments"></div>
     </div>
   </body>

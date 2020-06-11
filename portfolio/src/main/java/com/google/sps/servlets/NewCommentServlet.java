@@ -15,8 +15,6 @@
 package com.google.sps.servlets;
 
 import com.google.appengine.api.datastore.*;
-import com.google.appengine.repackaged.com.google.datastore.v1.Datastore;
-import com.google.gson.Gson;
 import com.google.sps.utils.CommentDataStore;
 import com.google.sps.data.Comment;
 import com.google.sps.utils.ServletUtils;
@@ -27,12 +25,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/** Servlet that handles getting and posting comment content. */
+/** Servlet that handles posting new comment. */
 @WebServlet("/comment")
-public final class CommentServlet extends HttpServlet {
+public final class NewCommentServlet extends HttpServlet {
+
+  private final static String PARAM_NAME_COMMENTER = "commenter";
+  private final static String PARAM_NAME_CONTENT = "content";
+  private static final String DEFAULT_COMMENT_COMMENTER = "Anonymous";
+  private static final String DEFAULT_COMMENT_CONTENT = "No comments";
 
   private CommentDataStore commentDataStore;
 
@@ -41,52 +41,11 @@ public final class CommentServlet extends HttpServlet {
     this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
   }
 
-  static class Constants {
-    private final static String PARAM_NAME_COMMENTER = "commenter";
-    private final static String PARAM_NAME_CONTENT = "content";
-  }
-  
-  @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Loads the comment from Datastore
-    List<Comment> comments = getComments();
-
-    // Converts into json form
-    String json = convertToJsonUsingGson(comments);
-
-    // Sends the JSON as the response
-    sendJsonResponse(response, json);
-  }
-
-  /** Loads the comment from Datastore */
-  private List<Comment> getComments() {
-    // Loads comments from Datastore
-    List<Comment> comments = this.commentDataStore.load();
-
-    return comments;
-  }
-
-
-  /** Converts the list of Comment objecct into json form */
-  private String convertToJsonUsingGson(List<Comment> comments) {
-    Gson gson = new Gson();
-    String json = gson.toJson(comments);
-    return json;
-  }
-
-  /** Sends the JSON as response */
-  private void sendJsonResponse(HttpServletResponse response, String json) throws IOException {
-    response.setContentType("application/json;");
-    response.getWriter().println(json);
-  }
-
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Gets comments from the form
-    String commenter = ServletUtils.getParameter(
-            request, /*name=*/Constants.PARAM_NAME_COMMENTER, /*defaultValue=*/"");
-    String content = ServletUtils.getParameter(
-            request, /*name=*/Constants.PARAM_NAME_CONTENT, /*defaultValue=*/"No comments");
+    String commenter = ServletUtils.getParameter(request, PARAM_NAME_COMMENTER, DEFAULT_COMMENT_COMMENTER);
+    String content = ServletUtils.getParameter(request, PARAM_NAME_CONTENT, DEFAULT_COMMENT_CONTENT);
     // TODO: validate request parameters
 
     // Stores the comment into the Datastore

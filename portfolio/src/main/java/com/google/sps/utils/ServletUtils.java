@@ -18,4 +18,31 @@ public class ServletUtils {
         }
         return value;
     }
+
+    /**
+     * Gets the integer parameter from html form input.
+     * @param request Http request.
+     * @param parameterName Input id in html element.
+     * @param defaultValue Default integer.
+     * @return Parsed integer or default value if exception occur
+     */
+    public static int getIntParameter(HttpServletRequest request, String parameterName, int defaultValue) {
+        String resultStr = request.getParameter(parameterName);
+
+        try {
+            int result = Integer.parseInt(resultStr);
+
+            if (result < 0 || result > 10) {
+                throw new NumberFormatException("Please enter an integer between 1 and 10.");
+            }
+
+            return result;
+        } catch (NumberFormatException e) {
+            // TODO: error handling
+            System.err.println("Could not convert to int: " + resultStr);
+            // TODO: add logging to log the error
+
+            return defaultValue;
+        }
+    }
 }

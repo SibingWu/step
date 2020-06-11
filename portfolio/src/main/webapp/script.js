@@ -76,7 +76,7 @@ function getRandomFact(facts, currentFact) {
 function goBack() {
     // If this is the first page.
     if(history.length === 1){
-        window.location = "index.html"
+        window.location = "index.html";
     } else {
         history.back();
     }
@@ -85,8 +85,13 @@ function goBack() {
 /**
  * Fetches the response of "/data".
  */
-function loadAndShowData() {
-    fetch("/comment").then(response => response.json()).then((json) => {
+function loadAndShowComments() {
+    let maxNumberOfComments = document.getElementById("quantity").value;
+    if (maxNumberOfComments.length == 0) {
+        maxNumberOfComments = 0;
+    }
+    let url = "/list-comment?quantity=" + maxNumberOfComments;
+    fetch(url, {method: "GET"}).then(response => response.json()).then((json) => {
         const div = document.getElementById("comments");
         div.innerHTML = "";
 
@@ -115,7 +120,6 @@ function getFormattedComment(json) {
     let timestamp = json.timestamp;
 
     let timeString = getFormattedDate(timestamp);
-
 
     let resultString = `Commenter: ${commenter}\nTime: ${timeString}\nComment: ${content}`;
 
