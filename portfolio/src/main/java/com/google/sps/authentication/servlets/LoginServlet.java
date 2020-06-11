@@ -15,6 +15,16 @@ public class LoginServlet extends HttpServlet {
 
     private UserService userService;
 
+    private class ResultType {
+        private boolean isLoggedIn;
+        private String htmlText;
+
+        private ResultType(boolean isLoggedIn, String htmlText) {
+            this.isLoggedIn = isLoggedIn;
+            this.htmlText = htmlText;
+        }
+    }
+
     @Override
     public void init() {
         this.userService = UserServiceFactory.getUserService();
@@ -25,27 +35,30 @@ public class LoginServlet extends HttpServlet {
         response.setContentType("application/json;");
 
         boolean isLoggedIn = this.userService.isUserLoggedIn();
-        response.getWriter().println(convertToJsonUsingGson(isLoggedIn));
+        String htmlText;
 
         if (isLoggedIn) {
             String userEmail = userService.getCurrentUser().getEmail();
             String urlToRedirectToAfterUserLogsOut = "/login";
             String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
 
-            response.getWriter().println("<p>Hello " + userEmail + "!</p>");
-            response.getWriter().println("<p>Logout <a href=\"" + logoutUrl + "\">here</a>.</p>");
+            htmlText = String.format("<p>Hello %s!</p>\n"
+                    + "<p>Logout <a href=\"%s\">here</a>.</p>", userEmail, logoutUrl);
         } else {
             String urlToRedirectToAfterUserLogsIn = "/login";
             String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
 
-            response.getWriter().println("<p>Hello stranger.</p>");
-            response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+            htmlText = String.format("<p>Hello stranger.</p>"
+                    + "<p>Login <a href=\"%s\">here</a>.</p>", loginUrl);
         }
+
+        ResultType resultType = new ResultType(isLoggedIn, htmlText);
+        response.getWriter().println(convertToJsonUsingGson(resultType));
     }
 
-    private String convertToJsonUsingGson(boolean isLoggedIn) {
+    private String convertToJsonUsingGson(ResultType resultType) {
         Gson gson = new Gson();
-        String json = gson.toJson(isLoggedIn);
+        String json = gson.toJson(resultType);
         return json;
     }
 }
