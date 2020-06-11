@@ -7,8 +7,6 @@ function getLoginStatus() {
         let isLoggedIn = json.isLoggedIn;
         let htmlText = json.htmlText;
 
-        let commentSection = document.getElementById("cotent");
-
         if (!isLoggedIn) {
             // Hides the comment section.
             content.style.display = "none";
@@ -16,7 +14,7 @@ function getLoginStatus() {
             const loginDiv = document.createElement("div");
             let id = document.createAttribute("id");
             id.value = "login";
-            loginDiv.setAttributeNode(loginDiv);
+            loginDiv.setAttributeNode(id);
             loginDiv.innerHTML = htmlText;
 
             let body = document.getElementById("body");
@@ -25,9 +23,10 @@ function getLoginStatus() {
             const logoutDiv = document.createElement("div");
             let id = document.createAttribute("id");
             id.value = "logout";
-            logoutDiv.setAttributeNode(div);
+            logoutDiv.setAttributeNode(id);
             logoutDiv.innerHTML = htmlText;
 
+            let commentSection = document.getElementById("content");
             commentSection.appendChild(logoutDiv);
         }
     });
