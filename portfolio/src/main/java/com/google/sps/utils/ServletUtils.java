@@ -1,5 +1,7 @@
 package com.google.sps.utils;
 
+import com.google.gson.Gson;
+
 import javax.servlet.http.HttpServletRequest;
 
 /** Auxiliary functions and variables to support comment feature. */
