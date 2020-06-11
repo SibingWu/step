@@ -9,8 +9,9 @@ public interface ObjectDataStore<T> {
     /**
      * Puts the object into Datastore.
      * @param item Object needed to be stored.
+     * @return Id of the entity.
      */
-    public void store(T item);
+    public long store(T item);
 
     /**
      * Loads the object from Datastore.

@@ -59,7 +59,7 @@ public final class NewCommentServlet extends HttpServlet {
   private void storeComment(String commenter, String content) {
     // Creates a miscellaneous comment object to convert it to entity
     long timestamp = System.currentTimeMillis();
-    Comment comment = new Comment(0, commenter, content, timestamp);
+    Comment comment = new Comment(commenter, content, timestamp);
 
     // Stores the comment as an entity into Datastore
     this.commentDataStore.store(comment);

@@ -12,12 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that handles deleting comment content. */
 @WebServlet("/delete-comment")
 public class DeleteCommentServlet extends HttpServlet {
-
-    private CommentDataStore commentDataStore;
-
     private static final String KIND = "Comment";
     // TODO: actually this constant is used in both Comment and DeleteCommentServlet,
     //  seems not proper to put it private static final, how i shall do it?
+
+    private CommentDataStore commentDataStore;
 
     @Override
     public void init() {
@@ -25,7 +24,11 @@ public class DeleteCommentServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // TODO: error handling and param validation.
+        //  error handling: Id wrong format
+        //  Id does not match any comment
+        //  Id of comment not belong to you
         long id = Long.parseLong(request.getParameter("id"));
 
         this.commentDataStore.delete(KIND, id);
