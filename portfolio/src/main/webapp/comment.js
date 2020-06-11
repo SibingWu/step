@@ -1,5 +1,6 @@
 function getLoginStatus() {
-    fetch("/login").then(response => response.text()).then((text) => {
+    fetch("/login", headers: {"Content-Type": "text/plain"}).
+    then(response => response.text()).then((text) => {
 //        if (text == "false") { // not logged in
 //
 //        }
