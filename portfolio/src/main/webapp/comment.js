@@ -1,3 +1,12 @@
+function getLoginStatus() {
+    fetch("/login").then(response => response.text()).then((text) => {
+//        if (text == "false") { // not logged in
+//
+//        }
+        console.log(text);
+    });
+}
+
 /**
  * Fetches the response of "/comment".
  */
@@ -18,13 +27,6 @@ function loadAndShowComments() {
         }
     });
 }
-
-/** Creates an <li> element containing text. */
-//function createListElement(text) {
-//    const liElement = document.createElement('li');
-//    liElement.innerText = text;
-//    return liElement;
-//}
 
 /**
  * Get a human readable string from a comment json.

@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>Leave Your Comment Here</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
     <script src="comment.js"></script>
 </head>
-<body>
+<body onload="getLoginStatus()">
     <div id="content">
         <form action="/comment" method="post">
             <label>Leave Your Comment Below</label><br>
@@ -25,6 +26,7 @@
         </form>
 
         <div id="comments"></div>
+        <button onclick="goBack()">Back</button>
     </div>
 </body>
 </html>
