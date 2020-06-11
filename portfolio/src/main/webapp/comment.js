@@ -12,25 +12,33 @@ function getLoginStatus() {
         let htmlText = json.htmlText;
 
         if (!isLoggedIn) {
-            const loginDiv = document.createElement("div");
-            let id = document.createAttribute("id");
-            id.value = "login";
-            loginDiv.setAttributeNode(id);
-            loginDiv.innerHTML = htmlText;
+            let loginDiv = createLoggingSection("login", htmlText);
 
             let body = document.getElementById("body");
             body.appendChild(loginDiv);
         } else {
-            const logoutDiv = document.createElement("div");
-            let id = document.createAttribute("id");
-            id.value = "logout";
-            logoutDiv.setAttributeNode(id);
-            logoutDiv.innerHTML = htmlText;
+            let logoutDiv = createLoggingSection("logout", htmlText);
 
             commentSection.appendChild(logoutDiv);
             commentSection.style.display = "block";
         }
     });
+}
+
+/**
+ * Creates logging section.
+ * @param {string} Element id name.
+ * @param {string} HTML content for the target element.
+ * @return HTML element
+ */
+function createLoggingSection(name, htmlText) {
+    const div = document.createElement("div");
+    let id = document.createAttribute("id");
+    id.value = "login";
+    div.setAttributeNode(id);
+    div.innerHTML = htmlText;
+
+    return div;
 }
 
 /**
@@ -61,12 +69,13 @@ function loadAndShowComments() {
  */
 function getFormattedComment(json) {
     let commenter = json.commenter;
+    let email = json.email;
     let content = json.content;
     let timestamp = json.timestamp;
 
     let timeString = getFormattedDate(timestamp);
 
-    let resultString = `Commenter: ${commenter}\nTime: ${timeString}\nComment: ${content}`;
+    let resultString = `Commenter: ${commenter}\nEmail: ${email}\nTime: ${timeString}\nComment: ${content}`;
 
     return resultString;
 }

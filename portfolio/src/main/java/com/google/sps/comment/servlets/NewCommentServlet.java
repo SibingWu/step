@@ -15,6 +15,8 @@
 package com.google.sps.comment.servlets;
 
 import com.google.appengine.api.datastore.*;
+import com.google.appengine.api.users.UserServiceFactory;
+import com.google.sps.authentication.userservice.UserServiceInteraction;
 import com.google.sps.comment.data.CommentDataStore;
 import com.google.sps.comment.data.Comment;
 import com.google.sps.utils.ServletUtils;
@@ -35,10 +37,12 @@ public final class NewCommentServlet extends HttpServlet {
   private static final String DEFAULT_COMMENT_CONTENT = "No comments";
 
   private CommentDataStore commentDataStore;
+  private UserServiceInteraction userServiceInteraction;
 
   @Override
   public void init() {
     this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
+    this.userServiceInteraction = new UserServiceInteraction(UserServiceFactory.getUserService());
   }
 
   @Override
@@ -58,8 +62,9 @@ public final class NewCommentServlet extends HttpServlet {
   /** Stores the comment into the Datastore */
   private void storeComment(String commenter, String content) {
     // Creates a miscellaneous comment object to convert it to entity
+    String email = this.userServiceInteraction.getUserEmail();
     long timestamp = System.currentTimeMillis();
-    Comment comment = new Comment(commenter, content, timestamp);
+    Comment comment = new Comment(commenter, email, content, timestamp);
 
     // Stores the comment as an entity into Datastore
     this.commentDataStore.store(comment);

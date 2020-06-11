@@ -1,7 +1,6 @@
 package com.google.sps.comment.servlets;
 
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.gson.Gson;
 import com.google.sps.comment.data.Comment;
 import com.google.sps.comment.data.CommentDataStore;
 import com.google.sps.utils.ServletUtils;
@@ -38,17 +37,10 @@ public final class ListCommentServlet extends HttpServlet {
         List<Comment> comments = this.commentDataStore.load(limit);
 
         // Converts into json form
-        String json = convertToJsonUsingGson(comments);
+        String json = ServletUtils.convertToJsonUsingGson(comments);
 
         // Sends the JSON as the response
         sendJsonResponse(response, json);
-    }
-
-    /** Converts the list of Comment objecct into json form */
-    private String convertToJsonUsingGson(List<Comment> comments) {
-        Gson gson = new Gson();
-        String json = gson.toJson(comments);
-        return json;
     }
 
     /** Sends the JSON as response */
