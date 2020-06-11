@@ -45,7 +45,7 @@ public final class LoginServlet extends HttpServlet {
             htmlText = String.format("<p>Hello %s!</p>\n"
                     + "<p>Logout <a href=\"%s\">here</a>.</p>", userEmail, logoutUrl);
         } else {
-            String urlToRedirectToAfterUserLogsIn = "/comment.html";
+            String urlToRedirectToAfterUserLogsIn = "/";
             String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
 
             htmlText = String.format("<p>Hello stranger.</p>"
