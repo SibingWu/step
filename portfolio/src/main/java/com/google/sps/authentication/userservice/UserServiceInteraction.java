@@ -23,6 +23,6 @@ public final class UserServiceInteraction {
     }
 
     public String createLoginURL(String urlToRedirectToAfterUserLogsIn) {
-        return this.userService.createLogoutURL(urlToRedirectToAfterUserLogsIn);
+        return this.userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
     }
 }
