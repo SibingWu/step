@@ -14,7 +14,7 @@ import java.io.IOException;
 @WebServlet("/login")
 public final class LoginServlet extends HttpServlet {
 
-    private static final String GUEST_USER_NAME = "stranger";
+    private static final String GUEST_USER_NAME = "guest";
     private static final String URL_TO_REDIRECT_TO_AFTER_LOGS_OUT = "/index.html";
     private static final String URL_TO_REDIRECT_TO_AFTER_LOGS_IN = "/comments.html";
 
