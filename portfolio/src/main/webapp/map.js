@@ -15,6 +15,9 @@ function createMap() {
     trexMarker.addListener("click", function() {
         toggleBounce(trexMarker);
     });
+
+    const trexInfoWindow = new google.maps.InfoWindow({content: 'This is Stan, the T-Rex statue.'});
+    trexInfoWindow.open(map, trexMarker);
 }
 
 /**
