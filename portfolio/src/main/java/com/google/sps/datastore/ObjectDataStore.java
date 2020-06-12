@@ -1,4 +1,4 @@
-package com.google.sps.utils;
+package com.google.sps.datastore;
 
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 

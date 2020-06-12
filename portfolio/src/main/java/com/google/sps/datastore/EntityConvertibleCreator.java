@@ -1,4 +1,4 @@
-package com.google.sps.data;
+package com.google.sps.datastore;
 
 import com.google.appengine.api.datastore.Entity;
 
