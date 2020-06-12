@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/** Gets the log in information. */
 @WebServlet("/login")
 public final class LoginServlet extends HttpServlet {
 
@@ -19,6 +20,7 @@ public final class LoginServlet extends HttpServlet {
         this.userService = UserServiceFactory.getUserService();
     }
 
+    // Gets the log in status.
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html;");
