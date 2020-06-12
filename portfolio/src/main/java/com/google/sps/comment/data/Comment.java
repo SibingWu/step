@@ -6,7 +6,6 @@ import com.google.sps.datastore.EntityConvertibleCreator;
 
 /** Represents a comment with related details. */
 public final class Comment implements EntityConvertible {
-    private static final String KIND = "Comment";
     private static final String PROPERTY_NAME_COMMENTER = "commenter";
     private static final String PROPERTY_NAME_EMAIL = "email";
     private static final String PROPERTY_NAME_CONTENT = "content";
@@ -35,8 +34,8 @@ public final class Comment implements EntityConvertible {
     }
 
     @Override
-    public Entity toEntity(String key) {
-        Entity commentEntity = new Entity(KIND);
+    public Entity toEntity(String kind) {
+        Entity commentEntity = new Entity(kind);
         commentEntity.setProperty(PROPERTY_NAME_COMMENTER, this.commenter);
         commentEntity.setProperty(PROPERTY_NAME_EMAIL, this.email);
         commentEntity.setProperty(PROPERTY_NAME_CONTENT, this.content);
