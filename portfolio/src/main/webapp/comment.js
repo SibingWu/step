@@ -27,7 +27,7 @@ function getLoginStatus() {
  * @param {html element} commentSection HTML div element for comment section.
  */
 function showMemberUI(isLoggedIn, user, loggingUrl, commentSection) {
-    let htmlText = getGreetingHTML(false, user, loggingUrl);
+    let htmlText = getGreetingHTML(true, user, loggingUrl);
     let logoutDiv = createLoggingRelatedSection("logout", htmlText);
 
     commentSection.appendChild(logoutDiv);
