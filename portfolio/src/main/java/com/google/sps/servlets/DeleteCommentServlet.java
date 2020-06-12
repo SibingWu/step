@@ -20,6 +20,7 @@ public final class DeleteCommentServlet extends HttpServlet {
         this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
     }
 
+    // TODO: try DELETE request and doDelete()
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // TODO: error handling and param validation.
