@@ -12,12 +12,12 @@ function createMap() {
       title: "Stan the T-Rex"
     });
 
+    const trexInfoWindow = new google.maps.InfoWindow({content: 'This is Stan, the T-Rex statue.'});
+
     trexMarker.addListener("click", function() {
         toggleBounce(trexMarker);
+        trexInfoWindow.open(map, trexMarker);
     });
-
-    const trexInfoWindow = new google.maps.InfoWindow({content: 'This is Stan, the T-Rex statue.'});
-    trexInfoWindow.open(map, trexMarker);
 }
 
 /**
