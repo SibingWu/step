@@ -14,7 +14,7 @@ function loadAndShowComments() {
 
 /**
  * Shows comments on the page.
- * @param {json} A list of comments in json format.
+ * @param {json} commentsJson A list of comments in json format.
  */
 function showComments(commentsJson) {
     const div = document.getElementById("comments");
