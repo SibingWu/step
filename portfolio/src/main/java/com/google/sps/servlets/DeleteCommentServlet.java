@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that handles deleting comment content. */
 @WebServlet("/delete-comment")
-public class DeleteCommentServlet extends HttpServlet {
+public final class DeleteCommentServlet extends HttpServlet {
     private static final String KIND = "Comment";
     // TODO: actually this constant is used in both Comment and DeleteCommentServlet,
     //  seems not proper to put it private static final, how i shall do it?
