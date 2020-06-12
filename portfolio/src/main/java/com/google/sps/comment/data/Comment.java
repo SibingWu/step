@@ -26,7 +26,7 @@ public final class Comment implements EntityConvertible {
         this.timestamp = timestamp;
     }
 
-    public Comment(long id, String commenter, String email, String content, long timestamp) {
+    private Comment(long id, String commenter, String email, String content, long timestamp) {
         this.id = id;
         this.commenter = commenter;
         this.email = email;

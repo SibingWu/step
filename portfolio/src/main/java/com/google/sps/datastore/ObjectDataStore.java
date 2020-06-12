@@ -22,8 +22,7 @@ public interface ObjectDataStore<T> {
 
     /**
      * Deletes a specific object in Datastore.
-     * @param kind Entity kind name.
      * @param id Target entity id.
      */
-    public void delete(String kind, long id);
+    public void delete(long id);
 }

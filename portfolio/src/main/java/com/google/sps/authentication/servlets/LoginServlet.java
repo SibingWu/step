@@ -10,19 +10,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/** Gets the log in information. */
 @WebServlet("/login")
 public final class LoginServlet extends HttpServlet {
+    private static final String GUEST_USER_NAME = "stranger";
+    private static final String URL_TO_REDIRECT_TO_AFTER_LOGS_OUT = "/index.html";
+    private static final String URL_TO_REDIRECT_TO_AFTER_LOGS_IN = "/comments.html";
 
     private UserServiceInteraction userServiceInteraction;
 
-    private class ResultType {
-        // For json creation
+    private class LoginResult {
         private boolean isLoggedIn;
-        private String htmlText;
+        private String loggingUrl;
+        private String user;
 
-        private ResultType(boolean isLoggedIn, String htmlText) {
+        private LoginResult(boolean isLoggedIn, String loggingUrl, String user) {
             this.isLoggedIn = isLoggedIn;
-            this.htmlText = htmlText;
+            this.loggingUrl = loggingUrl;
+            this.user = user;
         }
     }
 
@@ -31,29 +36,26 @@ public final class LoginServlet extends HttpServlet {
         this.userServiceInteraction = new UserServiceInteraction(UserServiceFactory.getUserService());
     }
 
+    // Gets the log in status.
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("application/json;");
 
-        boolean isUserLoggedIn = this.userServiceInteraction.isUserLoggedIn();
-        String htmlText;
+        boolean isLoggedIn = this.userServiceInteraction.isUserLoggedIn();
+        String loggingUrl;
+        String user;
 
-        if (isUserLoggedIn) {
-            String userEmail = this.userServiceInteraction.getUserEmail();
-            String urlToRedirectToAfterUserLogsOut = "/index.html";
-            String logoutUrl = this.userServiceInteraction.createLogoutURL(urlToRedirectToAfterUserLogsOut);
-
-            htmlText = String.format("<p>Hello %s!</p>\n"
-                    + "<p>Logout <a href=\"%s\">here</a>.</p>", userEmail, logoutUrl);
+        if (isLoggedIn) {
+            user = this.userServiceInteraction.getUserEmail();
+            String urlToRedirectToAfterUserLogsOut = URL_TO_REDIRECT_TO_AFTER_LOGS_OUT;
+            loggingUrl = this.userServiceInteraction.createLogoutURL(urlToRedirectToAfterUserLogsOut);
         } else {
-            String urlToRedirectToAfterUserLogsIn = "/comments.html";
-            String loginUrl = this.userServiceInteraction.createLoginURL(urlToRedirectToAfterUserLogsIn);
-
-            htmlText = String.format("<p>Hello stranger.</p>"
-                    + "<p>Login <a href=\"%s\">here</a>.</p>", loginUrl);
+            user = GUEST_USER_NAME;
+            String urlToRedirectToAfterUserLogsIn = URL_TO_REDIRECT_TO_AFTER_LOGS_IN;
+            loggingUrl = this.userServiceInteraction.createLoginURL(urlToRedirectToAfterUserLogsIn);
         }
 
-        ResultType resultType = new ResultType(isUserLoggedIn, htmlText);
-        response.getWriter().println(ServletUtils.convertToJsonUsingGson(resultType));
+        LoginResult loginResult = new LoginResult(isLoggedIn, loggingUrl, user);
+        response.getWriter().println(ServletUtils.convertToJsonUsingGson(loginResult));
     }
 }
