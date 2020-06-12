@@ -34,6 +34,8 @@ public final class NewCommentServlet extends HttpServlet {
   private static final String DEFAULT_COMMENT_COMMENTER = "Anonymous";
   private static final String DEFAULT_COMMENT_CONTENT = "No comments";
 
+  private static final String REDIRECT_LINK = "/comments.html";
+
   private CommentDataStore commentDataStore;
 
   @Override
@@ -52,7 +54,7 @@ public final class NewCommentServlet extends HttpServlet {
     storeComment(commenter, content);
 
     // Redirects back to the HTML page.
-    response.sendRedirect("/comments.html");
+    response.sendRedirect(REDIRECT_LINK);
   }
 
   /** Stores the comment into the Datastore */

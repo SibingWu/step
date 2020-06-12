@@ -50,12 +50,11 @@ public final class CommentDataStore implements ObjectDataStore<Comment> {
 
     /**
      * Deletes a specific comment in Datastore.
-     * @param kind Comment entity kind name.
      * @param id Target comment entity id.
      */
     @Override
-    public void delete(String kind, long id) {
-        Key taskEntityKey = KeyFactory.createKey(kind, id);
+    public void delete(long id) {
+        Key taskEntityKey = KeyFactory.createKey(KIND, id);
         this.datastoreService.delete(taskEntityKey);
         // TODO: error handling: "java.lang.IllegalArgumentException - If the specified key was invalid."
     }
