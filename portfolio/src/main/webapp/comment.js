@@ -72,19 +72,54 @@ function getGreetingHTML(user, loggingUrl) {
 function loadAndShowComments() {
     let maxNumberOfComments = document.getElementById("quantity").value;
     if (maxNumberOfComments.length == 0) {
-        maxNumberOfComments = 0;
+        maxNumberOfComments = "0";
     }
     let url = "/list-comment?quantity=" + maxNumberOfComments;
-    fetch(url, {method: "GET"}).then(response => response.json()).then((json) => {
-        const div = document.getElementById("comments");
-        div.innerHTML = "";
-
-        for (let i = 0; i < json.length; i++) {
-            let comment = json[i];
-            let commentString = getFormattedComment(comment);
-            div.appendChild(createCommentElement(comment, commentString));
-        }
+    fetch(url, {method: "GET"}).then(response => response.json()).then((commentsJson) => {
+        showComments(commentsJson);
     });
+}
+
+/**
+ * Shows comments on the page.
+ * @param {json} commentsJson A list of comments in json format.
+ */
+function showComments(commentsJson) {
+    const div = document.getElementById("comments");
+    div.innerHTML = "";
+
+    for (let i = 0; i < commentsJson.length; i++) {
+        let commentJson = commentsJson[i];
+        div.appendChild(createCommentElement(commentJson));
+    }
+}
+
+/**
+ * Creates an element that represents a comment, including its delete button.
+ * @param {json} comment Comment object in json form.
+ * @return A HTML element.
+ */
+function createCommentElement(comment) {
+  const commentElement = document.createElement("li");
+  commentElement.className = "comment";
+
+  const contentElement = document.createElement("span");
+  contentElement.innerText = getFormattedComment(comment);
+
+  const deleteButtonElement = document.createElement('button');
+  deleteButtonElement.className = "button";
+
+  deleteButtonElement.innerText = "Delete this comment";
+  deleteButtonElement.addEventListener("click", () => {
+    deleteComment(comment);
+
+    // Remove the comment from the DOM.
+    commentElement.remove();
+  });
+
+  commentElement.appendChild(contentElement);
+  commentElement.appendChild(deleteButtonElement);
+  return commentElement;
 }
 
 /**
@@ -114,34 +149,6 @@ function getFormattedDate(timestamp) {
     let timeString = date.toLocaleString();
 
     return timeString;
-}
-
-/**
- * Creates an element that represents a comment, including its delete button.
- * @param {json} comment Comment object in json form.
- * @param {string} A formatted comment string.
- */
-function createCommentElement(comment, commentString) {
-    const commentElement = document.createElement("li");
-    commentElement.className = "comment";
-
-    const contentElement = document.createElement("span");
-    contentElement.innerText = commentString;
-
-    const deleteButtonElement = document.createElement('button');
-    deleteButtonElement.className = "button";
-
-    deleteButtonElement.innerText = "Delete this comment from database";
-    deleteButtonElement.addEventListener("click", () => {
-    deleteComment(comment);
-
-    // Remove the comment from the DOM.
-    commentElement.remove();
-    });
-
-    commentElement.appendChild(contentElement);
-    commentElement.appendChild(deleteButtonElement);
-    return commentElement;
 }
 
 /**
