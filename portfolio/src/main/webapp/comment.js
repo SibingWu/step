@@ -27,7 +27,7 @@ function getLoginStatus() {
  * @param {html element} commentSection HTML div element for comment section.
  */
 function showMemberUI(user, loggingUrl, commentSection) {
-    let htmlText = getGreetingHTML(true, user, loggingUrl);
+    let htmlText = getGreetingHTML(/* isLoggedIn= */true, user, loggingUrl);
     let logoutDiv = createLoggingRelatedSection("logout", htmlText);
 
     commentSection.appendChild(logoutDiv);
@@ -40,7 +40,7 @@ function showMemberUI(user, loggingUrl, commentSection) {
  * @param {string} loggingUrl Log in url.
  */
 function showGuestUI(user, loggingUrl) {
-    let htmlText = getGreetingHTML(false, user, loggingUrl);
+    let htmlText = getGreetingHTML(/* isLoggedIn= */false, user, loggingUrl);
     let loginDiv = createLoggingRelatedSection("login", htmlText);
 
     let body = document.getElementById("body");
