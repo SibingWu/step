@@ -9,8 +9,9 @@ public interface ObjectDataStore<T> {
     /**
      * Puts the object into Datastore.
      * @param item Object needed to be stored.
+     * @return Id of the entity.
      */
-    public void store(T item);
+    public long store(T item);
 
     /**
      * Loads the object from Datastore.
@@ -18,4 +19,10 @@ public interface ObjectDataStore<T> {
      * @return An immutable list of objects.
      */
     public ImmutableList<T> load(int limit);
+
+    /**
+     * Deletes a specific object in Datastore.
+     * @param id Target entity id.
+     */
+    public void delete(long id);
 }

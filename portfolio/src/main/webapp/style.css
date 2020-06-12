@@ -7,3 +7,17 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+.comment {
+  border: thin solid black;
+  display: flex;
+  margin: 10px;
+  padding: 10px;
+  width: 300px;
+}
+
+.button {
+  height: fit-content;
+  width: fit-content;
+  margin: auto;
+}

@@ -29,10 +29,12 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/comment")
 public final class NewCommentServlet extends HttpServlet {
 
-  private final static String PARAM_NAME_COMMENTER = "commenter";
-  private final static String PARAM_NAME_CONTENT = "content";
+  private static final String PARAM_NAME_COMMENTER = "commenter";
+  private static final String PARAM_NAME_CONTENT = "content";
   private static final String DEFAULT_COMMENT_COMMENTER = "Anonymous";
   private static final String DEFAULT_COMMENT_CONTENT = "No comments";
+
+  private static final String REDIRECT_LINK = "/comments.html";
 
   private CommentDataStore commentDataStore;
 
@@ -52,7 +54,7 @@ public final class NewCommentServlet extends HttpServlet {
     storeComment(commenter, content);
 
     // Redirects back to the HTML page.
-    response.sendRedirect("/index.html");
+    response.sendRedirect(REDIRECT_LINK);
   }
 
   /** Stores the comment into the Datastore */

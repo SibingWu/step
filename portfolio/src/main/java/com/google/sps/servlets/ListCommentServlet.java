@@ -32,6 +32,7 @@ public final class ListCommentServlet extends HttpServlet {
         // Gets the displayed comment limit
         int limit = ServletUtils.getIntParameter(request, PARAM_NAME_QUANTITY, DEFAULT_COMMENT_QUANTITY);
         // TODO: parameter validation
+        // TODO: error handling
 
         // Loads the comment from Datastore
         List<Comment> comments = this.commentDataStore.load(limit);

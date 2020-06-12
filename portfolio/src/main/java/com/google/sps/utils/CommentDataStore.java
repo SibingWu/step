@@ -19,10 +19,16 @@ public final class CommentDataStore implements ObjectDataStore<Comment> {
     /**
      * Puts the comments into Datastore.
      * @param comment Comment object needed to be stored.
+     * @return Id of the entity.
      */
     @Override
-    public void store(Comment comment) {
-        this.datastoreService.put(comment.toEntity(KIND));
+    public long store(Comment comment) {
+        Entity commentEntity = comment.toEntity(KIND);
+        long id = commentEntity.getKey().getId();
+
+        this.datastoreService.put(commentEntity);
+
+        return id;
     }
 
     /**
@@ -40,5 +46,16 @@ public final class CommentDataStore implements ObjectDataStore<Comment> {
             comments.add(Comment.CREATOR.fromEntity(entity));
         }
         return comments.build();
+    }
+
+    /**
+     * Deletes a specific comment in Datastore.
+     * @param id Target comment entity id.
+     */
+    @Override
+    public void delete(long id) {
+        Key taskEntityKey = KeyFactory.createKey(KIND, id);
+        this.datastoreService.delete(taskEntityKey);
+        // TODO: error handling: "java.lang.IllegalArgumentException - If the specified key was invalid."
     }
 }

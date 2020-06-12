@@ -4,40 +4,48 @@ import com.google.appengine.api.datastore.Entity;
 
 /** Represents a comment with related details. */
 public final class Comment implements EntityConvertible {
+    private static final String KIND = "Comment";
+    private static final String PROPERTY_NAME_COMMENTER = "commenter";
+    private static final String PROPERTY_NAME_CONTENT = "content";
+    private static final String PROPERTY_NAME_TIMESTAMP = "timestamp";
+
+    private final long id; // for json creation
     private final String commenter;
     private final String content;
     private final long timestamp;
 
     public Comment(String commenter, String content, long timestamp) {
+        this.id = 0;
         this.commenter = commenter;
         this.content = content;
         this.timestamp = timestamp;
     }
 
-    static class PropertyName {
-        private final static String KIND = "Comment";
-        private final static String COMMENTER = "commenter";
-        private final static String CONTENT = "content";
-        private final static String TIMESTAMP = "timestamp";
+    private Comment(long id, String commenter, String content, long timestamp) {
+        this.id = id;
+        this.commenter = commenter;
+        this.content = content;
+        this.timestamp = timestamp;
     }
 
     @Override
     public Entity toEntity(String key) {
-        Entity commentEntity = new Entity(PropertyName.KIND);
-        commentEntity.setProperty(PropertyName.COMMENTER, this.commenter);
-        commentEntity.setProperty(PropertyName.CONTENT, this.content);
-        commentEntity.setProperty(PropertyName.TIMESTAMP, this.timestamp);
+        Entity commentEntity = new Entity(KIND);
+        commentEntity.setProperty(PROPERTY_NAME_COMMENTER, this.commenter);
+        commentEntity.setProperty(PROPERTY_NAME_CONTENT, this.content);
+        commentEntity.setProperty(PROPERTY_NAME_TIMESTAMP, this.timestamp);
 
         return commentEntity;
     }
 
     public static final EntityConvertibleCreator<Comment> CREATOR
             = entity -> {
-                String commenter = (String) entity.getProperty(PropertyName.COMMENTER);
-                String content = (String) entity.getProperty(PropertyName.CONTENT);
-                long timestamp = (long) entity.getProperty(PropertyName.TIMESTAMP);
+                long id = entity.getKey().getId();
+                String commenter = (String) entity.getProperty(PROPERTY_NAME_COMMENTER);
+                String content = (String) entity.getProperty(PROPERTY_NAME_CONTENT);
+                long timestamp = (long) entity.getProperty(PROPERTY_NAME_TIMESTAMP);
 
-                Comment comment = new Comment(commenter, content, timestamp);
+                Comment comment = new Comment(id, commenter, content, timestamp);
                 return comment;
             };
 }
