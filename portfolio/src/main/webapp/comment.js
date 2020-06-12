@@ -26,8 +26,8 @@ function getLoginStatus() {
  * @param {string} loggingUrl Log out url.
  * @param {html element} commentSection HTML div element for comment section.
  */
-function showMemberUI(user, loggingUrl, commentSection) {
-    let htmlText = getGreetingHTML(user, loggingUrl);
+function showMemberUI(isLoggedIn, user, loggingUrl, commentSection) {
+    let htmlText = getGreetingHTML(false, user, loggingUrl);
     let logoutDiv = createLoggingRelatedSection("logout", htmlText);
 
     commentSection.appendChild(logoutDiv);
@@ -40,7 +40,7 @@ function showMemberUI(user, loggingUrl, commentSection) {
  * @param {string} loggingUrl Log in url.
  */
 function showGuestUI(user, loggingUrl) {
-    let htmlText = getGreetingHTML(user, loggingUrl);
+    let htmlText = getGreetingHTML(false, user, loggingUrl);
     let loginDiv = createLoggingRelatedSection("login", htmlText);
 
     let body = document.getElementById("body");
@@ -49,13 +49,15 @@ function showGuestUI(user, loggingUrl) {
 
 /**
  * Gets the HTML for logging page.
+ * @param {boolean} isLoggedIn If the user is logged in or not.
  * @param {string} user User name.
  * @param {string} loggingUrl Log in or log out url.
  * @return HTML content.
  */
-function getGreetingHTML(user, loggingUrl) {
+function getGreetingHTML(isLoggedIn, user, loggingUrl) {
+    let logging = isLoggedIn ? "Login" : "Logout";
     let resultHTML = `<p>Hello ${user}.</p>\n`
-                   + `<p>Login <a href=${loggingUrl}>here</a>.</p>`;
+                   + `<p>${logging} <a href=${loggingUrl}>here</a>.</p>`;
 
     return resultHTML;
 }
