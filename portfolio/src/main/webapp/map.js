@@ -9,8 +9,10 @@ function createMap() {
       map: map,
       draggable: true,
       animation: google.maps.Animation.DROP,
-      title: 'Stan the T-Rex'
+      title: "Stan the T-Rex"
     });
+
+  trexMarker.addListener("click", toggleBounce);
 }
 
 /**
