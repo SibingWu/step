@@ -9,28 +9,61 @@ function getLoginStatus() {
         commentSection.style.display = "none";
 
         let isLoggedIn = json.isLoggedIn;
-        let htmlText = json.htmlText;
+        let loggingUrl = json.loggingUrl;
+        let user = json.user;
 
-        if (!isLoggedIn) {
-            const loginDiv = document.createElement("div");
-            let id = document.createAttribute("id");
-            id.value = "login";
-            loginDiv.setAttributeNode(id);
-            loginDiv.innerHTML = htmlText;
-
-            let body = document.getElementById("body");
-            body.appendChild(loginDiv);
+        if (isLoggedIn) {
+            showMemberUI(user, loggingUrl, commentSection);
         } else {
-            const logoutDiv = document.createElement("div");
-            let id = document.createAttribute("id");
-            id.value = "logout";
-            logoutDiv.setAttributeNode(id);
-            logoutDiv.innerHTML = htmlText;
-
-            commentSection.appendChild(logoutDiv);
-            commentSection.style.display = "block";
+            showGuestUI(user, loggingUrl);
         }
     });
+}
+
+/**
+ * Shows the UI for logged in member.
+ * @param {string} user User name.
+ * @param {string} loggingUrl Log in or log out url.
+ * @param {html element} commentSection HTML div element for comment section.
+ */
+function showMemberUI(user, loggingUrl, commentSection) {
+    const logoutDiv = document.createElement("div");
+    let id = document.createAttribute("id");
+    id.value = "logout";
+    logoutDiv.setAttributeNode(id);
+    logoutDiv.innerHTML = getGreetingHTML(user, loggingUrl);
+
+    commentSection.appendChild(logoutDiv);
+    commentSection.style.display = "block";
+}
+
+/**
+ * Shows the UI for non-logged in guest.
+ * @param {string} user User name.
+ * @param {string} loggingUrl Log in or log out url.
+ */
+function showGuestUI(user, loggingUrl) {
+    const loginDiv = document.createElement("div");
+    let id = document.createAttribute("id");
+    id.value = "login";
+    loginDiv.setAttributeNode(id);
+    loginDiv.innerHTML = getGreetingHTML(user, loggingUrl);
+
+    let body = document.getElementById("body");
+    body.appendChild(loginDiv);
+}
+
+/**
+ * Gets the HTML for logging page.
+ * @param {string} user User name.
+ * @param {string} loggingUrl Log in or log out url.
+ * @return HTML content.
+ */
+function getGreetingHTML(user, loggingUrl) {
+    let resultHTML = `<p>Hello ${user}.</p>\n`
+                   + `<p>Login <a href=${loggingUrl}>here</a>.</p>`;
+
+    return resultHTML;
 }
 
 /**
