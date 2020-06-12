@@ -16,7 +16,7 @@ package com.google.sps.comment.servlets;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.users.UserServiceFactory;
-import com.google.sps.authentication.userservice.UserServiceInteraction;
+import com.google.sps.authentication.userservice.UserServiceWrapper;
 import com.google.sps.comment.data.CommentDataStore;
 import com.google.sps.comment.data.Comment;
 import com.google.sps.utils.ServletUtils;
@@ -39,12 +39,12 @@ public final class NewCommentServlet extends HttpServlet {
   private static final String REDIRECT_LINK = "/comments.html";
 
   private CommentDataStore commentDataStore;
-  private UserServiceInteraction userServiceInteraction;
+  private UserServiceWrapper userServiceWrapper;
 
   @Override
   public void init() {
     this.commentDataStore = new CommentDataStore(DatastoreServiceFactory.getDatastoreService());
-    this.userServiceInteraction = new UserServiceInteraction(UserServiceFactory.getUserService());
+    this.userServiceWrapper = new UserServiceWrapper(UserServiceFactory.getUserService());
   }
 
   @Override
@@ -64,7 +64,7 @@ public final class NewCommentServlet extends HttpServlet {
   /** Stores the comment into the Datastore */
   private void storeComment(String commenter, String content) {
     // Creates a miscellaneous comment object to convert it to entity
-    String email = this.userServiceInteraction.getUserEmail();
+    String email = this.userServiceWrapper.getUserEmail();
     long timestamp = System.currentTimeMillis();
     Comment comment = new Comment(commenter, email, content, timestamp);
 

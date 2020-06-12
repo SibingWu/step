@@ -2,11 +2,11 @@ package com.google.sps.authentication.userservice;
 
 import com.google.appengine.api.users.UserService;
 
-/** Interface that handles the interaction with User Service API. */
-public final class UserServiceInteraction {
+/** Wrapper that handles the interaction with User Service API. */
+public final class UserServiceWrapper {
     private final UserService userService;
 
-    public UserServiceInteraction(UserService userService) {
+    public UserServiceWrapper(UserService userService) {
         this.userService = userService;
     }
 

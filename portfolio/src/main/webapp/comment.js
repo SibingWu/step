@@ -21,46 +21,30 @@ function getLoginStatus() {
 }
 
 /**
- * Creates logging section.
- * @param {string} Element id name.
- * @param {string} HTML content for the target element.
- * @return HTML element
- */
-function createLoggingSection(name, htmlText) {
-    const div = document.createElement("div");
-    let id = document.createAttribute("id");
-    id.value = "login";
-    div.setAttributeNode(id);
-    div.innerHTML = htmlText;
-
-    return div;
-}
-
-/**
  * Shows the UI for logged in member.
  * @param {string} user User name.
- * @param {string} loggingUrl Log in or log out url.
+ * @param {string} loggingUrl Log out url.
  * @param {html element} commentSection HTML div element for comment section.
  */
 function showMemberUI(user, loggingUrl, commentSection) {
     let htmlText = getGreetingHTML(user, loggingUrl);
-                let logoutDiv = createLoggingSection("logout", htmlText);
+    let logoutDiv = createLoggingRelatedSection("logout", htmlText);
 
-                commentSection.appendChild(logoutDiv);
-                commentSection.style.display = "block";
+    commentSection.appendChild(logoutDiv);
+    commentSection.style.display = "block";
 }
 
 /**
  * Shows the UI for non-logged in guest.
  * @param {string} user User name.
- * @param {string} loggingUrl Log in or log out url.
+ * @param {string} loggingUrl Log in url.
  */
 function showGuestUI(user, loggingUrl) {
     let htmlText = getGreetingHTML(user, loggingUrl);
-                let loginDiv = createLoggingSection("login", htmlText);
+    let loginDiv = createLoggingRelatedSection("login", htmlText);
 
-                let body = document.getElementById("body");
-                body.appendChild(loginDiv);
+    let body = document.getElementById("body");
+    body.appendChild(loginDiv);
 }
 
 /**
@@ -74,6 +58,22 @@ function getGreetingHTML(user, loggingUrl) {
                    + `<p>Login <a href=${loggingUrl}>here</a>.</p>`;
 
     return resultHTML;
+}
+
+/**
+ * Creates logging section.
+ * @param {string} name Element id name.
+ * @param {string} htmlText HTML content for the target element.
+ * @return HTML element
+ */
+function createLoggingRelatedSection(name, htmlText) {
+    const div = document.createElement("div");
+    let id = document.createAttribute("id");
+    id.value = name;
+    div.setAttributeNode(id);
+    div.innerHTML = htmlText;
+
+    return div;
 }
 
 /**
@@ -145,7 +145,10 @@ function getFormattedComment(json) {
 
     let timeString = getFormattedDate(timestamp);
 
-    let resultString = `Commenter: ${commenter}\nEmail: ${email}\nTime: ${timeString}\nComment: ${content}`;
+    let resultString = `Commenter: ${commenter}\n`
+                     + `Email: ${email}\n`
+                     + `Time: ${timeString}\n`
+                     + `Comment: ${content}`;
 
     return resultString;
 }
@@ -169,5 +172,5 @@ function getFormattedDate(timestamp) {
 function deleteComment(comment) {
     const params = new URLSearchParams();
     params.append("id", comment.id);
-    fetch('/delete-comment', {method: "POST", body: params});
+    fetch("/delete-comment", {method: "POST", body: params});
 }
