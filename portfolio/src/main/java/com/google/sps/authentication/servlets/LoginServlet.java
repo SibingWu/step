@@ -50,16 +50,10 @@ public final class LoginServlet extends HttpServlet {
             user = userService.getCurrentUser().getEmail();
             String urlToRedirectToAfterUserLogsOut = URL_TO_REDIRECT_TO_AFTER_LOGS_OUT;
             loggingUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
-
-//            htmlText = String.format("<p>Hello %s!</p>\n"
-//                    + "<p>Logout <a href=\"%s\">here</a>.</p>", userEmail, logoutUrl);
         } else {
             user = GUEST_USER_NAME;
             String urlToRedirectToAfterUserLogsIn = URL_TO_REDIRECT_TO_AFTER_LOGS_IN;
             loggingUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
-
-//            htmlText = String.format("<p>Hello stranger.</p>"
-//                    + "<p>Login <a href=\"%s\">here</a>.</p>", loginUrl);
         }
 
         LoginResult loginResult = new LoginResult(isLoggedIn, loggingUrl, user);
