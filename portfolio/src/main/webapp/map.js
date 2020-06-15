@@ -1,11 +1,12 @@
 /** Creates a map and adds it to the page. */
 function createMap() {
+    const trexPosition = {lat: 37.422, lng: -122.084};
     const map = new google.maps.Map(
-        document.getElementById('map'),
-        {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+        document.getElementById("map"),
+        {center: trexPosition, zoom: 16});
 
     const trexMarker = new google.maps.Marker({
-      position: {lat: 37.421903, lng: -122.084674},
+      position: trexPosition,
       map: map,
       draggable: true,
       animation: google.maps.Animation.DROP,
@@ -18,7 +19,7 @@ function createMap() {
 }
 
 /**
- * Generates the bouncing animation for marker.
+ * Toggles the animation of the marker on / off.
  * @param {marker} marker Target marker.
  */
 function toggleBounce(marker) {
