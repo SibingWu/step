@@ -42,7 +42,7 @@ public final class LoginServlet extends HttpServlet {
         String urlToRedirectToAfterUserLogsOut = ServletUtils.getParameter(
                 request, "redirectAfterLogOut", DEFAULT_URL_TO_REDIRECT_TO_AFTER_LOGS_OUT);
         String urlToRedirectToAfterUserLogsIn = ServletUtils.getParameter(
-                request, "redirectAfterLogOut", DEFAULT_URL_TO_REDIRECT_TO_AFTER_LOGS_IN);
+                request, "redirectAfterLogIn", DEFAULT_URL_TO_REDIRECT_TO_AFTER_LOGS_IN);
 
         response.setContentType("application/json;");
 
