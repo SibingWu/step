@@ -14,8 +14,8 @@ import java.io.IOException;
 @WebServlet("/login")
 public final class LoginServlet extends HttpServlet {
     private static final String GUEST_USER_NAME = "stranger";
-    private static final String URL_TO_REDIRECT_TO_AFTER_LOGS_OUT = "/index.html";
-    private static final String URL_TO_REDIRECT_TO_AFTER_LOGS_IN = "/comments.html";
+    private static final String DEFAULT_URL_TO_REDIRECT_TO_AFTER_LOGS_OUT = "/index.html";
+    private static final String DEFAULT_URL_TO_REDIRECT_TO_AFTER_LOGS_IN = "/comments.html";
 
     private UserServiceWrapper userServiceWrapper;
 
@@ -39,6 +39,11 @@ public final class LoginServlet extends HttpServlet {
     // Gets the log in status.
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String urlToRedirectToAfterUserLogsOut = ServletUtils.getParameter(
+                request, "redirectAfterLogOut", DEFAULT_URL_TO_REDIRECT_TO_AFTER_LOGS_OUT);
+        String urlToRedirectToAfterUserLogsIn = ServletUtils.getParameter(
+                request, "redirectAfterLogOut", DEFAULT_URL_TO_REDIRECT_TO_AFTER_LOGS_IN);
+
         response.setContentType("application/json;");
 
         boolean isLoggedIn = this.userServiceWrapper.isUserLoggedIn();
@@ -47,11 +52,11 @@ public final class LoginServlet extends HttpServlet {
 
         if (isLoggedIn) {
             user = this.userServiceWrapper.getUserEmail();
-            String urlToRedirectToAfterUserLogsOut = URL_TO_REDIRECT_TO_AFTER_LOGS_OUT;
+            // String urlToRedirectToAfterUserLogsOut = URL_TO_REDIRECT_TO_AFTER_LOGS_OUT;
             loggingUrl = this.userServiceWrapper.createLogoutURL(urlToRedirectToAfterUserLogsOut);
         } else {
             user = GUEST_USER_NAME;
-            String urlToRedirectToAfterUserLogsIn = URL_TO_REDIRECT_TO_AFTER_LOGS_IN;
+            // String urlToRedirectToAfterUserLogsIn = URL_TO_REDIRECT_TO_AFTER_LOGS_IN;
             loggingUrl = this.userServiceWrapper.createLoginURL(urlToRedirectToAfterUserLogsIn);
         }
 
