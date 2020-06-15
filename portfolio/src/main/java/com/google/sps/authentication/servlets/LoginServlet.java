@@ -31,6 +31,18 @@ public final class LoginServlet extends HttpServlet {
         }
     }
 
+    private class LoginResult {
+        private boolean isLoggedIn;
+        private String loggingUrl;
+        private String user;
+
+        private LoginResult(boolean isLoggedIn, String loggingUrl, String user) {
+            this.isLoggedIn = isLoggedIn;
+            this.loggingUrl = loggingUrl;
+            this.user = user;
+        }
+    }
+
     @Override
     public void init() {
         this.userServiceWrapper = new UserServiceWrapper(UserServiceFactory.getUserService());
