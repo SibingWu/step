@@ -8,11 +8,6 @@
     <script src="comment.js"></script>
 </head>
 <body id="body" onload="getLoginStatus()">
-    <form action="/login" method="get" id="loggingForm">
-        <input type="hidden" id="redirectAfterLogIn" name="redirectAfterLogIn" value="/comments.html">
-        <input type="hidden" id="redirectAfterLogOut" name="redirectAfterLogOut" value="/index.html">
-    </form>
-
     <div id="content" style="display: none;">
         <form action="/comment" method="post">
             <label>Leave Your Comment Below</label><br>
