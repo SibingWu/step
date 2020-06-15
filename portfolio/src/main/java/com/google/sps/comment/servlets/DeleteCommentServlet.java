@@ -27,6 +27,7 @@ public final class DeleteCommentServlet extends HttpServlet {
         //  error handling: Id wrong format
         //  Id does not match any comment
         //  Id of comment not belong to you
+
         long id = Long.parseLong(request.getParameter("id"));
 
         this.commentDataStore.delete(id);
