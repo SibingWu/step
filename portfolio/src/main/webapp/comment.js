@@ -2,11 +2,7 @@
  * Gets the log in status from "/login".
  */
 function getLoginStatus() {
-    let redirectAfterLogIn = document.getElementById("redirectAfterLogIn").value;
-    let redirectAfterLogOut = document.getElementById("redirectAfterLogOut").value;
-    let url = "/login?redirectAfterLogIn=" + redirectAfterLogIn + "&redirectAfterLogOut=" + redirectAfterLogOut;
-
-    fetch(url, {headers: {"Content-Type": "application/json"}, method: "GET"}).
+    fetch("/login", {headers: {"Content-Type": "application/json"}}).
     then(response => response.json()).then((json) => {
         let commentSection = document.getElementById("content");
         // Hides the comment section.
