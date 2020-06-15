@@ -47,4 +47,15 @@ public class ServletUtils {
             return defaultValue;
         }
     }
+
+    /**
+     * Converts the target item into json format.
+     * @param item Target item.
+     * @return Target item in json format.
+     */
+    public static <T> String convertToJsonUsingGson(T item) {
+        Gson gson = new Gson();
+        String json = gson.toJson(item);
+        return json;
+    }
 }
