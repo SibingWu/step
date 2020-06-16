@@ -22,7 +22,6 @@ import java.util.List;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    // throw new UnsupportedOperationException("TODO: Implement this method.");
 
     Collection<TimeRange> availableMeetings = new ArrayList<>();
 
@@ -45,17 +44,21 @@ public final class FindMeetingQuery {
     int start = TimeRange.START_OF_DAY;
 
     for (TimeRange timeRange: mergedTimeRanges) {
+      // Interval duration is not enough
       if (timeRange.start() - start < duration) {
-        start = timeRange.contains(timeRange.end()) ? Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+        start = timeRange.contains(timeRange.end()) ?
+                Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
         continue;
       }
 
       TimeRange availableMeeting = TimeRange.fromStartEnd(start, timeRange.start(), false);
       availableMeetings.add(availableMeeting);
 
-      start = timeRange.contains(timeRange.end()) ? Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+      start = timeRange.contains(timeRange.end()) ?
+              Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
     }
 
+    // Deals with the last remaining time slot of a day
     if (start < TimeRange.END_OF_DAY && (TimeRange.END_OF_DAY - start) >= duration) {
       availableMeetings.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
     }
