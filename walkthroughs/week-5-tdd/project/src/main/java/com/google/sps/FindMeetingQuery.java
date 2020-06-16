@@ -18,14 +18,23 @@ import java.util.*;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    if (events == null || request == null || events.size() <= 0) {
+    if (request == null) {
       return Arrays.asList(TimeRange.WHOLE_DAY);
+    }
+
+    if (events == null || events.size() <= 0) {
+      if (request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
+        return new ArrayList<>();
+      } else {
+        return Arrays.asList(TimeRange.WHOLE_DAY);
+      }
     }
 
     Collection<String> attendees = request.getAttendees();
     Collection<String> attendeesWithOptional = new ArrayList<>();
     attendeesWithOptional.addAll(request.getAttendees());
     attendeesWithOptional.addAll(request.getOptionalAttendees());
+
     long duration = request.getDuration();
 
     List<TimeRange> occupiedTimeRange = new ArrayList<>();
