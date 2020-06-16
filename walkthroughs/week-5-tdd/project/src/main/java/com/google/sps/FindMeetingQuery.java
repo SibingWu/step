@@ -97,7 +97,7 @@ public final class FindMeetingQuery {
       availableMeetings.add(availableMeeting);
 
       start = timeRange.contains(timeRange.end()) ?
-              Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+              Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : Math.min(timeRange.end(), TimeRange.END_OF_DAY);
     }
 
     // Deals with the last remaining time slot of a day
