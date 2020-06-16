@@ -14,7 +14,6 @@
 
 package com.google.sps;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,6 +21,10 @@ import java.util.List;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+    if (events == null || request == null || events.size() <= 0) {
+      return new ArrayList<>();
+    }
+
     Collection<String> attendees = request.getAttendees();
     Collection<String> attendeesWithOptional = new ArrayList<>();
     attendeesWithOptional.addAll(request.getAttendees());
@@ -60,10 +63,44 @@ public final class FindMeetingQuery {
     return false;
   }
 
+  private Collection<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
+    Collection<TimeRange> availableMeetings = new ArrayList<>();
+
+    if (occupiedTimeRange == null || occupiedTimeRange.size() <= 0) {
+      return availableMeetings;
+    }
+
+    List<TimeRange> mergedTimeRanges = mergeTimeRange(occupiedTimeRange);
+
+    int start = TimeRange.START_OF_DAY;
+
+    for (TimeRange timeRange: mergedTimeRanges) {
+      // Interval duration is not enough
+      if (timeRange.start() - start < duration) {
+        start = timeRange.contains(timeRange.end()) ?
+                Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+        continue;
+      }
+
+      TimeRange availableMeeting = TimeRange.fromStartEnd(start, timeRange.start(), false);
+      availableMeetings.add(availableMeeting);
+
+      start = timeRange.contains(timeRange.end()) ?
+              Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+    }
+
+    // Deals with the last remaining time slot of a day
+    if (start < TimeRange.END_OF_DAY && (TimeRange.END_OF_DAY - start) >= duration) {
+      availableMeetings.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
+    }
+
+    return availableMeetings;
+  }
+
   private List<TimeRange> mergeTimeRange(List<TimeRange> timeRanges) {
     List<TimeRange> mergedTimeRanges = new ArrayList<>();
 
-    if (timeRanges == null) {
+    if (timeRanges == null || timeRanges.size() <= 0) {
       return mergedTimeRanges;
     }
 
@@ -96,35 +133,5 @@ public final class FindMeetingQuery {
     }
 
     return mergedTimeRanges;
-  }
-
-  private Collection<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
-    Collection<TimeRange> availableMeetings = new ArrayList<>();
-
-    List<TimeRange> mergedTimeRanges = mergeTimeRange(occupiedTimeRange);
-
-    int start = TimeRange.START_OF_DAY;
-
-    for (TimeRange timeRange: mergedTimeRanges) {
-      // Interval duration is not enough
-      if (timeRange.start() - start < duration) {
-        start = timeRange.contains(timeRange.end()) ?
-                Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
-        continue;
-      }
-
-      TimeRange availableMeeting = TimeRange.fromStartEnd(start, timeRange.start(), false);
-      availableMeetings.add(availableMeeting);
-
-      start = timeRange.contains(timeRange.end()) ?
-              Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
-    }
-
-    // Deals with the last remaining time slot of a day
-    if (start < TimeRange.END_OF_DAY && (TimeRange.END_OF_DAY - start) >= duration) {
-      availableMeetings.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
-    }
-
-    return availableMeetings;
   }
 }
