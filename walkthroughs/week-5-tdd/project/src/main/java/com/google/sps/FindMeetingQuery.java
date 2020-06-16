@@ -14,15 +14,12 @@
 
 package com.google.sps;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     if (events == null || request == null || events.size() <= 0) {
-      return new ArrayList<>();
+      return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
     Collection<String> attendees = request.getAttendees();
@@ -67,6 +64,7 @@ public final class FindMeetingQuery {
     Collection<TimeRange> availableMeetings = new ArrayList<>();
 
     if (occupiedTimeRange == null || occupiedTimeRange.size() <= 0) {
+      availableMeetings.add(TimeRange.WHOLE_DAY);
       return availableMeetings;
     }
 
