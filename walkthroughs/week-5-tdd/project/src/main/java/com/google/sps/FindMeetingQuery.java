@@ -72,6 +72,10 @@ public final class FindMeetingQuery {
   private Collection<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
     Collection<TimeRange> availableMeetings = new ArrayList<>();
 
+    if (duration > TimeRange.WHOLE_DAY.duration()) {
+      return availableMeetings;
+    }
+
     if (occupiedTimeRange == null || occupiedTimeRange.size() <= 0) {
       availableMeetings.add(TimeRange.WHOLE_DAY);
       return availableMeetings;
@@ -85,7 +89,7 @@ public final class FindMeetingQuery {
       // Interval duration is not enough
       if (timeRange.start() - start < duration) {
         start = timeRange.contains(timeRange.end()) ?
-                Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+                Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : Math.min(timeRange.end(), TimeRange.END_OF_DAY);
         continue;
       }
 
