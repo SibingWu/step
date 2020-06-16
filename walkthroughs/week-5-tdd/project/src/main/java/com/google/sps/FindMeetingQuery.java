@@ -55,7 +55,12 @@ public final class FindMeetingQuery {
     if (!availableMeetings.isEmpty()) {
       return availableMeetings;
     } else {
-      return getAvailableTimeRange(occupiedTimeRange, duration);
+      // Has mandatory attendees
+      if (!attendees.isEmpty()) {
+        return getAvailableTimeRange(occupiedTimeRange, duration);
+      } else {
+        return new ArrayList<>();
+      }
     }
   }
 
