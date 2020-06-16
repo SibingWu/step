@@ -45,7 +45,13 @@ public final class FindMeetingQuery {
     int start = TimeRange.START_OF_DAY;
     int end = TimeRange.START_OF_DAY;
     for (TimeRange timeRange: mergedTimeRanges) {
-      TimeRange availableMeeting = TimeRange.fromStartEnd(start, end, timeRange.contains(end));
+      if (timeRange.start() - start < duration) {
+        start = timeRange.contains(end) ? end - 1 : end;
+        end = start;
+        continue;
+      }
+
+      TimeRange availableMeeting = TimeRange.fromStartEnd(start, timeRange.end(), timeRange.contains(end));
       availableMeetings.add(availableMeeting);
 
       start = timeRange.contains(end) ? end - 1 : end;
