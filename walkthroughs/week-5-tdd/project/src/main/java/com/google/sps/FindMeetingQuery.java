@@ -23,7 +23,9 @@ import java.util.List;
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     Collection<String> attendees = request.getAttendees();
-    Collection<String> optionalAttendees = request.getOptionalAttendees();
+    Collection<String> attendeesWithOptional = new ArrayList<>();
+    attendeesWithOptional.addAll(request.getAttendees());
+    attendeesWithOptional.addAll(request.getOptionalAttendees());
     long duration = request.getDuration();
 
     List<TimeRange> occupiedTimeRange = new ArrayList<>();
@@ -32,13 +34,13 @@ public final class FindMeetingQuery {
     for (Event event: events) {
       // Ignores those events which do not have overlapping attendees
       if (!hasAttendeesAttending(event.getAttendees(), attendees)
-              && !hasAttendeesAttending(event.getAttendees(), optionalAttendees)) {
+              && !hasAttendeesAttending(event.getAttendees(), attendeesWithOptional)) {
         continue;
       }
 
       occupiedTimeRange.add(event.getWhen());
 
-      if (!hasAttendeesAttending(event.getAttendees(), optionalAttendees)) {
+      if (!hasAttendeesAttending(event.getAttendees(), attendeesWithOptional)) {
         continue;
       }
 
