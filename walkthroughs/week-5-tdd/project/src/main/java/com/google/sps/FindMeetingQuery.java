@@ -32,24 +32,18 @@ public final class FindMeetingQuery {
     List<TimeRange> occupiedTimeRangeWithOptional = new ArrayList<>();
 
     for (Event event: events) {
-      // Ignores those events which do not have overlapping attendees
-      if (!hasAttendeesAttending(event.getAttendees(), attendees)
-              && !hasAttendeesAttending(event.getAttendees(), attendeesWithOptional)) {
-        continue;
+      if (hasAttendeesAttending(event.getAttendees(), attendees)) {
+        occupiedTimeRange.add(event.getWhen());
       }
 
-      occupiedTimeRange.add(event.getWhen());
-
-      if (!hasAttendeesAttending(event.getAttendees(), attendeesWithOptional)) {
-        continue;
+      if (hasAttendeesAttending(event.getAttendees(), attendeesWithOptional)) {
+        occupiedTimeRangeWithOptional.add(event.getWhen());
       }
-
-      occupiedTimeRangeWithOptional.add(event.getWhen());
     }
 
     Collection<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
 
-    if (availableMeetings != null) {
+    if (!availableMeetings.isEmpty()) {
       return availableMeetings;
     } else {
       return getAvailableTimeRange(occupiedTimeRange, duration);
