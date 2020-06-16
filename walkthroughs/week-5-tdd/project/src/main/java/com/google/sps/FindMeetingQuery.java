@@ -45,12 +45,12 @@ public final class FindMeetingQuery {
       occupiedTimeRangeWithOptional.add(event.getWhen());
     }
 
-    Collection<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRange, duration);
+    Collection<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
 
     if (availableMeetings != null) {
       return availableMeetings;
     } else {
-      return getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
+      return getAvailableTimeRange(occupiedTimeRange, duration);
     }
   }
 
