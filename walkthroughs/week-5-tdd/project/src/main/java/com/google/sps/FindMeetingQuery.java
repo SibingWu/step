@@ -22,48 +22,36 @@ import java.util.List;
 
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-
-    Collection<TimeRange> availableMeetings = new ArrayList<>();
-
     Collection<String> attendees = request.getAttendees();
+    Collection<String> optionalAttendees = request.getOptionalAttendees();
     long duration = request.getDuration();
 
     List<TimeRange> occupiedTimeRange = new ArrayList<>();
+    List<TimeRange> occupiedTimeRangeWithOptional = new ArrayList<>();
 
     for (Event event: events) {
       // Ignores those events which do not have overlapping attendees
-      if (!hasAttendeesAttending(event.getAttendees(), attendees)) {
+      if (!hasAttendeesAttending(event.getAttendees(), attendees)
+              && !hasAttendeesAttending(event.getAttendees(), optionalAttendees)) {
         continue;
       }
 
       occupiedTimeRange.add(event.getWhen());
-    }
 
-    List<TimeRange> mergedTimeRanges = mergeTimeRange(occupiedTimeRange);
-
-    int start = TimeRange.START_OF_DAY;
-
-    for (TimeRange timeRange: mergedTimeRanges) {
-      // Interval duration is not enough
-      if (timeRange.start() - start < duration) {
-        start = timeRange.contains(timeRange.end()) ?
-                Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+      if (!hasAttendeesAttending(event.getAttendees(), optionalAttendees)) {
         continue;
       }
 
-      TimeRange availableMeeting = TimeRange.fromStartEnd(start, timeRange.start(), false);
-      availableMeetings.add(availableMeeting);
-
-      start = timeRange.contains(timeRange.end()) ?
-              Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+      occupiedTimeRangeWithOptional.add(event.getWhen());
     }
 
-    // Deals with the last remaining time slot of a day
-    if (start < TimeRange.END_OF_DAY && (TimeRange.END_OF_DAY - start) >= duration) {
-      availableMeetings.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
-    }
+    Collection<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRange, duration);
 
-    return availableMeetings;
+    if (availableMeetings != null) {
+      return availableMeetings;
+    } else {
+      return getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
+    }
   }
 
   private boolean hasAttendeesAttending(Collection<String> eventAttendees, Collection<String> requestAttendees) {
@@ -112,5 +100,35 @@ public final class FindMeetingQuery {
     }
 
     return mergedTimeRanges;
+  }
+
+  private Collection<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
+    Collection<TimeRange> availableMeetings = new ArrayList<>();
+
+    List<TimeRange> mergedTimeRanges = mergeTimeRange(occupiedTimeRange);
+
+    int start = TimeRange.START_OF_DAY;
+
+    for (TimeRange timeRange: mergedTimeRanges) {
+      // Interval duration is not enough
+      if (timeRange.start() - start < duration) {
+        start = timeRange.contains(timeRange.end()) ?
+                Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+        continue;
+      }
+
+      TimeRange availableMeeting = TimeRange.fromStartEnd(start, timeRange.start(), false);
+      availableMeetings.add(availableMeeting);
+
+      start = timeRange.contains(timeRange.end()) ?
+              Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : timeRange.end();
+    }
+
+    // Deals with the last remaining time slot of a day
+    if (start < TimeRange.END_OF_DAY && (TimeRange.END_OF_DAY - start) >= duration) {
+      availableMeetings.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
+    }
+
+    return availableMeetings;
   }
 }
