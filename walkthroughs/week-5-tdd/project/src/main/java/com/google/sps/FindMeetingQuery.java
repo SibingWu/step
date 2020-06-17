@@ -31,14 +31,14 @@ public final class FindMeetingQuery {
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     if (request == null) {
-      return Collections.unmodifiableList(Arrays.asList(TimeRange.WHOLE_DAY));
+      return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
     if (events == null || events.isEmpty()) {
       if (request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
-        return Collections.unmodifiableList(new ArrayList<>());
+        return new ArrayList<>();
       } else {
-        return Collections.unmodifiableList(Arrays.asList(TimeRange.WHOLE_DAY));
+        return Arrays.asList(TimeRange.WHOLE_DAY);
       }
     }
 
@@ -49,7 +49,7 @@ public final class FindMeetingQuery {
 
     // No attendees at all.
     if (attendeesWithOptional.isEmpty()) {
-      return Collections.unmodifiableList(new ArrayList<>());
+      return new ArrayList<>();
     }
 
     long duration = request.getDuration();
@@ -70,9 +70,9 @@ public final class FindMeetingQuery {
     Collection<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
 
     if (!availableMeetings.isEmpty()) {
-      return Collections.unmodifiableCollection(availableMeetings);
+      return availableMeetings;
     } else {
-      return Collections.unmodifiableCollection(getAvailableTimeRange(occupiedTimeRange, duration));
+      return getAvailableTimeRange(occupiedTimeRange, duration);
     }
   }
 
