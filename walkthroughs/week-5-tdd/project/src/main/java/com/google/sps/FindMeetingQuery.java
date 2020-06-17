@@ -72,7 +72,7 @@ public final class FindMeetingQuery {
     if (!availableMeetings.isEmpty()) {
       return availableMeetings;
     } else {
-      // Has mandatory attendees.
+      // No mandatory attendees.
       if (attendees.isEmpty()) {
         return new ArrayList<>();
       } else {
