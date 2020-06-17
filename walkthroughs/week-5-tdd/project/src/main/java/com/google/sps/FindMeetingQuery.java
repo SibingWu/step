@@ -14,19 +14,31 @@
 
 package com.google.sps;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public final class FindMeetingQuery {
+  /**
+   * Gets the available time slot for new meeting given existing meeting events.
+   * @param events Existing meeting events.
+   * @param request Request to set up a new meeting
+   * @return If one or more time slots exists so that both mandatory and optional attendees can attend,
+   *         returns those time slots. Otherwise, returns the time slots that fit just the mandatory attendees.
+   *         Returns empty if duration is greater than a day.
+   */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     if (request == null) {
-      return Arrays.asList(TimeRange.WHOLE_DAY);
+      return Collections.unmodifiableList(Arrays.asList(TimeRange.WHOLE_DAY));
     }
 
-    if (events == null || events.size() <= 0) {
+    if (events == null || events.isEmpty()) {
       if (request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
-        return new ArrayList<>();
+        return Collections.unmodifiableList(new ArrayList<>());
       } else {
-        return Arrays.asList(TimeRange.WHOLE_DAY);
+        return Collections.unmodifiableList(Arrays.asList(TimeRange.WHOLE_DAY));
       }
     }
 
@@ -34,6 +46,11 @@ public final class FindMeetingQuery {
     Collection<String> attendeesWithOptional = new ArrayList<>();
     attendeesWithOptional.addAll(request.getAttendees());
     attendeesWithOptional.addAll(request.getOptionalAttendees());
+
+    // No attendees at all.
+    if (attendeesWithOptional.isEmpty()) {
+      return Collections.unmodifiableList(new ArrayList<>());
+    }
 
     long duration = request.getDuration();
 
@@ -53,14 +70,9 @@ public final class FindMeetingQuery {
     Collection<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
 
     if (!availableMeetings.isEmpty()) {
-      return availableMeetings;
+      return Collections.unmodifiableCollection(availableMeetings);
     } else {
-      // Has mandatory attendees
-      if (!attendees.isEmpty()) {
-        return getAvailableTimeRange(occupiedTimeRange, duration);
-      } else {
-        return new ArrayList<>();
-      }
+      return Collections.unmodifiableCollection(getAvailableTimeRange(occupiedTimeRange, duration));
     }
   }
 
@@ -81,7 +93,7 @@ public final class FindMeetingQuery {
       return availableMeetings;
     }
 
-    if (occupiedTimeRange == null || occupiedTimeRange.size() <= 0) {
+    if (occupiedTimeRange == null || occupiedTimeRange.isEmpty()) {
       availableMeetings.add(TimeRange.WHOLE_DAY);
       return availableMeetings;
     }
@@ -91,23 +103,25 @@ public final class FindMeetingQuery {
     int start = TimeRange.START_OF_DAY;
 
     for (TimeRange timeRange: mergedTimeRanges) {
-      // Interval duration is not enough
-      if (timeRange.start() - start < duration) {
-        start = timeRange.contains(timeRange.end()) ?
-                Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : Math.min(timeRange.end(), TimeRange.END_OF_DAY);
+      // Interval duration is not enough.
+      if ((timeRange.start() - start) < duration) {
+        int startForInclusive = Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY);
+        int startForNonInclusive = Math.min(timeRange.end(), TimeRange.END_OF_DAY);
+        start = timeRange.contains(timeRange.end()) ? startForInclusive : startForNonInclusive;
         continue;
       }
 
-      TimeRange availableMeeting = TimeRange.fromStartEnd(start, timeRange.start(), false);
+      TimeRange availableMeeting = TimeRange.fromStartEnd(start, timeRange.start(), /* inclusive= */false);
       availableMeetings.add(availableMeeting);
 
-      start = timeRange.contains(timeRange.end()) ?
-              Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY) : Math.min(timeRange.end(), TimeRange.END_OF_DAY);
+      int startForInclusive = Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY);
+      int startForNonInclusive = Math.min(timeRange.end(), TimeRange.END_OF_DAY);
+      start = timeRange.contains(timeRange.end()) ? startForInclusive : startForNonInclusive;
     }
 
-    // Deals with the last remaining time slot of a day
+    // Deals with the last remaining time slot of a day.
     if (start < TimeRange.END_OF_DAY && (TimeRange.END_OF_DAY - start) >= duration) {
-      availableMeetings.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, true));
+      availableMeetings.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, /* inclusive= */true));
     }
 
     return availableMeetings;
@@ -116,7 +130,7 @@ public final class FindMeetingQuery {
   private List<TimeRange> mergeTimeRange(List<TimeRange> timeRanges) {
     List<TimeRange> mergedTimeRanges = new ArrayList<>();
 
-    if (timeRanges == null || timeRanges.size() <= 0) {
+    if (timeRanges == null || timeRanges.isEmpty()) {
       return mergedTimeRanges;
     }
 
@@ -124,7 +138,7 @@ public final class FindMeetingQuery {
 
     TimeRange last = null;
     for (TimeRange timeRange: timeRanges) {
-      // The first TimeRange or no overlapping
+      // The first TimeRange or no overlapping.
       if (last == null || !timeRange.overlaps(last)) {
         mergedTimeRanges.add(timeRange);
         last = timeRange;
