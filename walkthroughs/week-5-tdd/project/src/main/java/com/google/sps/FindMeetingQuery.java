@@ -30,11 +30,7 @@ public final class FindMeetingQuery {
    *         Returns empty if duration is greater than a day.
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    if (request == null) {
-      return Arrays.asList(TimeRange.WHOLE_DAY);
-    }
-
-    if (events == null || events.isEmpty()) {
+    if (events.isEmpty()) {
       if (request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
         return new ArrayList<>();
       } else {
@@ -98,7 +94,7 @@ public final class FindMeetingQuery {
       return availableMeetings;
     }
 
-    if (occupiedTimeRange == null || occupiedTimeRange.isEmpty()) {
+    if (occupiedTimeRange.isEmpty()) {
       availableMeetings.add(TimeRange.WHOLE_DAY);
       return availableMeetings;
     }
@@ -135,7 +131,7 @@ public final class FindMeetingQuery {
   private List<TimeRange> mergeTimeRange(List<TimeRange> timeRanges) {
     List<TimeRange> mergedTimeRanges = new ArrayList<>();
 
-    if (timeRanges == null || timeRanges.isEmpty()) {
+    if (timeRanges.isEmpty()) {
       return mergedTimeRanges;
     }
 
