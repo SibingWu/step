@@ -15,10 +15,11 @@
 package com.google.sps;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public final class FindMeetingQuery {
   /**
@@ -30,16 +31,13 @@ public final class FindMeetingQuery {
    *         Returns empty if duration is greater than a day.
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    if (events.isEmpty()) {
-      if (request.getDuration() > TimeRange.WHOLE_DAY.duration()) {
-        return new ArrayList<>();
-      } else {
-        return Arrays.asList(TimeRange.WHOLE_DAY);
-      }
+    long duration = request.getDuration();
+    if (duration > TimeRange.WHOLE_DAY.duration() || duration <= 0) {
+      return new ArrayList<>();
     }
 
-    Collection<String> attendees = request.getAttendees();
-    Collection<String> attendeesWithOptional = new ArrayList<>();
+    Set<String> attendees = new HashSet<>(request.getAttendees());
+    Set<String> attendeesWithOptional = new HashSet<>();
     attendeesWithOptional.addAll(request.getAttendees());
     attendeesWithOptional.addAll(request.getOptionalAttendees());
 
@@ -48,36 +46,37 @@ public final class FindMeetingQuery {
       return new ArrayList<>();
     }
 
-    long duration = request.getDuration();
-
     List<TimeRange> occupiedTimeRange = new ArrayList<>();
     List<TimeRange> occupiedTimeRangeWithOptional = new ArrayList<>();
 
     for (Event event: events) {
-      if (hasAttendeesAttending(event.getAttendees(), attendees)) {
-        occupiedTimeRange.add(event.getWhen());
-      }
+      getOccupiedTimeRange(attendees, occupiedTimeRange, event);
 
-      if (hasAttendeesAttending(event.getAttendees(), attendeesWithOptional)) {
-        occupiedTimeRangeWithOptional.add(event.getWhen());
-      }
+      getOccupiedTimeRange(attendeesWithOptional, occupiedTimeRangeWithOptional, event);
     }
 
     Collection<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
 
+    // Has time slots that satisfy both mandatory and optional attendees.
     if (!availableMeetings.isEmpty()) {
       return availableMeetings;
-    } else {
-      // No mandatory attendees.
-      if (attendees.isEmpty()) {
-        return new ArrayList<>();
-      } else {
-        return getAvailableTimeRange(occupiedTimeRange, duration);
-      }
+    }
+
+    // No mandatory attendees.
+    if (attendees.isEmpty()) {
+      return new ArrayList<>();
+    }
+
+    return getAvailableTimeRange(occupiedTimeRange, duration);
+  }
+
+  private void getOccupiedTimeRange(Set<String> attendees, List<TimeRange> occupiedTimeRange, Event event) {
+    if (hasAttendeesAttending(event.getAttendees(), attendees)) {
+      occupiedTimeRange.add(event.getWhen());
     }
   }
 
-  private boolean hasAttendeesAttending(Collection<String> eventAttendees, Collection<String> requestAttendees) {
+  private boolean hasAttendeesAttending(Set<String> eventAttendees, Set<String> requestAttendees) {
     for (String attendee: requestAttendees) {
       if (eventAttendees.contains(attendee)) {
         return true;
@@ -88,11 +87,9 @@ public final class FindMeetingQuery {
   }
 
   private Collection<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
-    Collection<TimeRange> availableMeetings = new ArrayList<>();
+    // Assumes 0 < duration <= WHOLE_DAY
 
-    if (duration > TimeRange.WHOLE_DAY.duration()) {
-      return availableMeetings;
-    }
+    Collection<TimeRange> availableMeetings = new ArrayList<>();
 
     if (occupiedTimeRange.isEmpty()) {
       availableMeetings.add(TimeRange.WHOLE_DAY);
