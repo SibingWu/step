@@ -33,7 +33,7 @@ public final class FindMeetingQuery {
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long duration = request.getDuration();
-    if (duration > TimeRange.WHOLE_DAY.duration() || duration <= 0) {
+    if (!isValidParams(events, duration)) {
       return Collections.unmodifiableList(new ArrayList<>());
     }
 
@@ -69,6 +69,16 @@ public final class FindMeetingQuery {
     }
 
     return Collections.unmodifiableList(getAvailableTimeRange(occupiedTimeRange, duration));
+  }
+
+  private boolean isValidParams(Collection<Event> events, long duration) {
+    // TODO: check for events that all events not crossing EOD.
+
+    if (duration > TimeRange.WHOLE_DAY.duration() || duration <= 0) {
+      return false;
+    }
+
+    return true;
   }
 
   private void getOccupiedTimeRange(Set<String> attendees, List<TimeRange> occupiedTimeRange, Event event) {
