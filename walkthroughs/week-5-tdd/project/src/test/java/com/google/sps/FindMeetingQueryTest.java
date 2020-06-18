@@ -59,10 +59,8 @@ public final class FindMeetingQueryTest {
   public void optionsForNoAttendees() {
     MeetingRequest request = new MeetingRequest(NO_ATTENDEES, DURATION_1_HOUR);
 
-//    Collection<TimeRange> actual = query.query(NO_EVENTS, request);
-//    Collection<TimeRange> expected = Arrays.asList(TimeRange.WHOLE_DAY);
-    Iterable<TimeRange> actual = query.query(NO_EVENTS, request);
-    Iterable<TimeRange> expected = Arrays.asList(TimeRange.WHOLE_DAY);
+    Collection<TimeRange> actual = query.query(NO_EVENTS, request);
+    Collection<TimeRange> expected = Arrays.asList(TimeRange.WHOLE_DAY);
 
     Assert.assertEquals(expected, actual);
   }
@@ -73,10 +71,8 @@ public final class FindMeetingQueryTest {
     int duration = TimeRange.WHOLE_DAY.duration() + 1;
     MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), duration);
 
-//    Collection<TimeRange> actual = query.query(NO_EVENTS, request);
-//    Collection<TimeRange> expected = Arrays.asList();
-    Iterable<TimeRange> actual = query.query(NO_EVENTS, request);
-    Iterable<TimeRange> expected = Arrays.asList();
+    Collection<TimeRange> actual = query.query(NO_EVENTS, request);
+    Collection<TimeRange> expected = Arrays.asList();
 
     Assert.assertEquals(expected, actual);
   }
