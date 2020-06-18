@@ -65,7 +65,7 @@ public final class FindMeetingQuery {
 
     // No mandatory attendees.
     if (attendees.isEmpty()) {
-      Collections.unmodifiableList(new ArrayList<>());
+      return Collections.unmodifiableList(new ArrayList<>());
     }
 
     return Collections.unmodifiableList(getAvailableTimeRange(occupiedTimeRange, duration));
