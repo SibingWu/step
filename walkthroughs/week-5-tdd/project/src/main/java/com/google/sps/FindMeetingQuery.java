@@ -25,7 +25,7 @@ import java.util.Set;
 public final class FindMeetingQuery {
   /**
    * Gets the available time slot for new meeting given existing meeting events.
-   * @param events Existing meeting events.
+   * @param events Existing meeting events, assuming all events end before EOD.
    * @param request Request to set up a new meeting
    * @return If one or more time slots exists so that both mandatory and optional attendees can attend,
    *         returns those time slots. Otherwise, returns the time slots that fit just the mandatory attendees.
@@ -34,7 +34,7 @@ public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long duration = request.getDuration();
     if (duration > TimeRange.WHOLE_DAY.duration() || duration <= 0) {
-      return new ArrayList<>();
+      return Collections.unmodifiableList(new ArrayList<>());
     }
 
     Set<String> attendees = new HashSet<>(request.getAttendees());
@@ -44,7 +44,7 @@ public final class FindMeetingQuery {
 
     // No attendees at all.
     if (attendeesWithOptional.isEmpty()) {
-      return Arrays.asList(TimeRange.WHOLE_DAY);
+      return Collections.unmodifiableList(Arrays.asList(TimeRange.WHOLE_DAY));
     }
 
     List<TimeRange> occupiedTimeRange = new ArrayList<>();
@@ -56,19 +56,19 @@ public final class FindMeetingQuery {
       getOccupiedTimeRange(attendeesWithOptional, occupiedTimeRangeWithOptional, event);
     }
 
-    Collection<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
+    List<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
 
     // Has time slots that satisfy both mandatory and optional attendees.
     if (!availableMeetings.isEmpty()) {
-      return availableMeetings;
+      return Collections.unmodifiableList(availableMeetings);
     }
 
     // No mandatory attendees.
     if (attendees.isEmpty()) {
-      return new ArrayList<>();
+      Collections.unmodifiableList(new ArrayList<>());
     }
 
-    return getAvailableTimeRange(occupiedTimeRange, duration);
+    return Collections.unmodifiableList(getAvailableTimeRange(occupiedTimeRange, duration));
   }
 
   private void getOccupiedTimeRange(Set<String> attendees, List<TimeRange> occupiedTimeRange, Event event) {
@@ -87,10 +87,10 @@ public final class FindMeetingQuery {
     return false;
   }
 
-  private Collection<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
+  private List<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
     // Assumes 0 < duration <= WHOLE_DAY
 
-    Collection<TimeRange> availableMeetings = new ArrayList<>();
+    List<TimeRange> availableMeetings = new ArrayList<>();
 
     if (occupiedTimeRange.isEmpty()) {
       availableMeetings.add(TimeRange.WHOLE_DAY);
