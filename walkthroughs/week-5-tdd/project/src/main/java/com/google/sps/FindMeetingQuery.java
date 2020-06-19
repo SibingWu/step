@@ -14,6 +14,7 @@
 
 package com.google.sps;
 
+import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -32,9 +33,10 @@ public final class FindMeetingQuery {
    *         Returns empty collection if invalid input.
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    long duration = request.getDuration();
-    if (!isValidParams(events, duration)) {
-      return Collections.unmodifiableList(new ArrayList<>());
+    long durationInMinutes = request.getDuration();
+    if (!isValidParams(events, durationInMinutes)) {
+      // return Collections.unmodifiableList(new ArrayList<>());
+      return ImmutableList.of();
     }
 
     Set<String> attendees = new HashSet<>(request.getAttendees());
@@ -47,16 +49,10 @@ public final class FindMeetingQuery {
       return Collections.unmodifiableList(Arrays.asList(TimeRange.WHOLE_DAY));
     }
 
-    List<TimeRange> occupiedTimeRange = new ArrayList<>();
-    List<TimeRange> occupiedTimeRangeWithOptional = new ArrayList<>();
+    List<TimeRange> occupiedTimeRange = getOccupiedTimeRange(attendees, events);
+    List<TimeRange> occupiedTimeRangeWithOptional = getOccupiedTimeRange(attendeesWithOptional, events);
 
-    for (Event event: events) {
-      getOccupiedTimeRange(attendees, occupiedTimeRange, event);
-
-      getOccupiedTimeRange(attendeesWithOptional, occupiedTimeRangeWithOptional, event);
-    }
-
-    List<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, duration);
+    List<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, durationInMinutes);
 
     // Has time slots that satisfy both mandatory and optional attendees.
     if (!availableMeetings.isEmpty()) {
@@ -68,7 +64,7 @@ public final class FindMeetingQuery {
       return Collections.unmodifiableList(new ArrayList<>());
     }
 
-    return Collections.unmodifiableList(getAvailableTimeRange(occupiedTimeRange, duration));
+    return Collections.unmodifiableList(getAvailableTimeRange(occupiedTimeRange, durationInMinutes));
   }
 
   private boolean isValidParams(Collection<Event> events, long duration) {
@@ -81,10 +77,14 @@ public final class FindMeetingQuery {
     return true;
   }
 
-  private void getOccupiedTimeRange(Set<String> attendees, List<TimeRange> occupiedTimeRange, Event event) {
-    if (Utils.hasIntersection(event.getAttendees(), attendees)) {
-      occupiedTimeRange.add(event.getWhen());
+  private List<TimeRange> getOccupiedTimeRange(Set<String> attendees, Collection<Event> events) {
+    List<TimeRange> occupiedTimeRange = new ArrayList<>();
+    for (Event event: events) {
+      if (Utils.hasIntersection(event.getAttendees(), attendees)) {
+        occupiedTimeRange.add(event.getWhen());
+      }
     }
+    return occupiedTimeRange;
   }
 
   private List<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
