@@ -46,7 +46,7 @@ public final class FindMeetingQuery {
 
     // No attendees at all.
     if (attendeesWithOptional.isEmpty()) {
-      return Collections.unmodifiableList(Arrays.asList(TimeRange.WHOLE_DAY));
+      return ImmutableList.copyOf(Arrays.asList(TimeRange.WHOLE_DAY));
     }
 
     List<TimeRange> occupiedTimeRange = getOccupiedTimeRange(attendees, events);
@@ -56,15 +56,15 @@ public final class FindMeetingQuery {
 
     // Has time slots that satisfy both mandatory and optional attendees.
     if (!availableMeetings.isEmpty()) {
-      return Collections.unmodifiableList(availableMeetings);
+      return ImmutableList.copyOf(availableMeetings);
     }
 
     // No mandatory attendees.
     if (attendees.isEmpty()) {
-      return Collections.unmodifiableList(new ArrayList<>());
+      return ImmutableList.of();
     }
 
-    return Collections.unmodifiableList(getAvailableTimeRange(occupiedTimeRange, durationInMinutes));
+    return ImmutableList.copyOf(getAvailableTimeRange(occupiedTimeRange, durationInMinutes));
   }
 
   private boolean isValidParams(Collection<Event> events, long duration) {
