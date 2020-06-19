@@ -26,10 +26,10 @@ public final class FindMeetingQuery {
   /**
    * Gets the available time slot for new meeting given existing meeting events.
    * @param events Existing meeting events, assuming all events end before EOD.
-   * @param request Request to set up a new meeting
+   * @param request Request to set up a new meeting with duration not exceeding the whole day.
    * @return If one or more time slots exists so that both mandatory and optional attendees can attend,
    *         returns those time slots. Otherwise, returns the time slots that fit just the mandatory attendees.
-   *         Returns empty if duration is greater than a day.
+   *         Returns empty collection if invalid input.
    */
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long duration = request.getDuration();
@@ -82,19 +82,9 @@ public final class FindMeetingQuery {
   }
 
   private void getOccupiedTimeRange(Set<String> attendees, List<TimeRange> occupiedTimeRange, Event event) {
-    if (hasAttendeesAttending(event.getAttendees(), attendees)) {
+    if (Utils.hasIntersection(event.getAttendees(), attendees)) {
       occupiedTimeRange.add(event.getWhen());
     }
-  }
-
-  private boolean hasAttendeesAttending(Set<String> eventAttendees, Set<String> requestAttendees) {
-    for (String attendee: requestAttendees) {
-      if (eventAttendees.contains(attendee)) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   private List<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
@@ -103,8 +93,7 @@ public final class FindMeetingQuery {
     List<TimeRange> availableMeetings = new ArrayList<>();
 
     if (occupiedTimeRange.isEmpty()) {
-      availableMeetings.add(TimeRange.WHOLE_DAY);
-      return availableMeetings;
+      return Arrays.asList(TimeRange.WHOLE_DAY);
     }
 
     List<TimeRange> mergedTimeRanges = mergeTimeRange(occupiedTimeRange);
@@ -157,13 +146,15 @@ public final class FindMeetingQuery {
           continue;
         }
 
-        if (last.end() == timeRange.end()) {
-          mergedTimeRange = TimeRange.fromStartEnd(last.start(), last.end(),
-                  last.contains(last.end()) || timeRange.contains(timeRange.end()));
+//        if (last.end() == timeRange.end()) {
+//          mergedTimeRange = TimeRange.fromStartEnd(last.start(), last.end(),
+//                  last.contains(last.end()) || timeRange.contains(timeRange.end()));
+//
+//        } else {
+//          mergedTimeRange = TimeRange.fromStartEnd(last.start(), timeRange.end(), timeRange.contains(timeRange.end()));
+//        }
 
-        } else {
-          mergedTimeRange = TimeRange.fromStartEnd(last.start(), timeRange.end(), timeRange.contains(timeRange.end()));
-        }
+        mergedTimeRange = TimeRange.fromStartEnd(last.start(), timeRange.end(), /* inclusive= */false);
 
         mergedTimeRanges.remove(mergedTimeRanges.size() - 1);
         mergedTimeRanges.add(mergedTimeRange);

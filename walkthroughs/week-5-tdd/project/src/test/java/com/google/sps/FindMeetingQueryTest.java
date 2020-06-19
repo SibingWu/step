@@ -183,9 +183,9 @@ public final class FindMeetingQueryTest {
     // Have each person have different events. We should see two options because each person has
     // split the restricted times.
     //
-    // Events  :       |--A--|     |--B--|
-    // Day     : |-----------------------------|
-    // Options : |--1--|     |--2--|     |--3--|
+    // Events  :        |--A--| |--C--|      |--B--|
+    // Day     : |---------------------------------|
+    // Options : |--1--|              |--2--|
 
     Collection<Event> events = Arrays.asList(
             new Event("Event 1", TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
@@ -340,7 +340,7 @@ public final class FindMeetingQueryTest {
     // Have one person, but make it so that there is just enough room at one point in the day to
     // have the meeting.
     //
-    // Events  : |--A--|     |----A----|
+    // Events  : |--A--|     |----B----|
     // Day     : |---------------------|
     // Options :       |-----|
 
