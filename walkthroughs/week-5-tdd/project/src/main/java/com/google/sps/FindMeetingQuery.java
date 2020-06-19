@@ -146,14 +146,6 @@ public final class FindMeetingQuery {
           continue;
         }
 
-//        if (last.end() == timeRange.end()) {
-//          mergedTimeRange = TimeRange.fromStartEnd(last.start(), last.end(),
-//                  last.contains(last.end()) || timeRange.contains(timeRange.end()));
-//
-//        } else {
-//          mergedTimeRange = TimeRange.fromStartEnd(last.start(), timeRange.end(), timeRange.contains(timeRange.end()));
-//        }
-
         mergedTimeRange = TimeRange.fromStartEnd(last.start(), timeRange.end(), /* inclusive= */false);
 
         mergedTimeRanges.remove(mergedTimeRanges.size() - 1);
