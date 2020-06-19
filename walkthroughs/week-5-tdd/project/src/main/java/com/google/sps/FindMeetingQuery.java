@@ -103,18 +103,14 @@ public final class FindMeetingQuery {
     for (TimeRange timeRange: mergedTimeRanges) {
       // Interval duration is not enough.
       if ((timeRange.start() - start) < duration) {
-        int startForInclusive = Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY);
-        int startForNonInclusive = Math.min(timeRange.end(), TimeRange.END_OF_DAY);
-        start = timeRange.contains(timeRange.end()) ? startForInclusive : startForNonInclusive;
+        start = Math.min(timeRange.end(), TimeRange.END_OF_DAY);
         continue;
       }
 
       TimeRange availableMeeting = TimeRange.fromStartEnd(start, timeRange.start(), /* inclusive= */false);
       availableMeetings.add(availableMeeting);
 
-      int startForInclusive = Math.min(timeRange.end() + 1, TimeRange.END_OF_DAY);
-      int startForNonInclusive = Math.min(timeRange.end(), TimeRange.END_OF_DAY);
-      start = timeRange.contains(timeRange.end()) ? startForInclusive : startForNonInclusive;
+      start = Math.min(timeRange.end(), TimeRange.END_OF_DAY);
     }
 
     // Deals with the last remaining time slot of a day.
