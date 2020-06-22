@@ -91,14 +91,13 @@ public final class FindMeetingQuery {
   private ImmutableList<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
     // Assumes 0 < duration <= WHOLE_DAY
 
-    ImmutableList.Builder<TimeRange> availableMeetings = ImmutableList.builder();
-
     if (occupiedTimeRange.isEmpty()) {
       return ImmutableList.of(TimeRange.WHOLE_DAY);
     }
 
     ImmutableList<TimeRange> mergedTimeRanges = mergeTimeRange(occupiedTimeRange);
 
+    ImmutableList.Builder<TimeRange> availableMeetings = ImmutableList.builder();
     int start = TimeRange.START_OF_DAY;
 
     for (TimeRange timeRange: mergedTimeRanges) {
