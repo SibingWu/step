@@ -23,6 +23,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Class that handles finding eligible time slot.
+ */
 public final class FindMeetingQuery {
   /**
    * Gets the available time slot for new meeting given existing meeting events.
@@ -35,7 +38,6 @@ public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
     long durationInMinutes = request.getDuration();
     if (!isValidParams(events, durationInMinutes)) {
-      // return Collections.unmodifiableList(new ArrayList<>());
       return ImmutableList.of();
     }
 
@@ -46,17 +48,17 @@ public final class FindMeetingQuery {
 
     // No attendees at all.
     if (attendeesWithOptional.isEmpty()) {
-      return ImmutableList.copyOf(Arrays.asList(TimeRange.WHOLE_DAY));
+      return ImmutableList.of(TimeRange.WHOLE_DAY);
     }
 
-    List<TimeRange> occupiedTimeRange = getOccupiedTimeRange(attendees, events);
-    List<TimeRange> occupiedTimeRangeWithOptional = getOccupiedTimeRange(attendeesWithOptional, events);
+    ImmutableList<TimeRange> occupiedTimeRange = getOccupiedTimeRange(attendees, events);
+    ImmutableList<TimeRange> occupiedTimeRangeWithOptional = getOccupiedTimeRange(attendeesWithOptional, events);
 
-    List<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, durationInMinutes);
+    ImmutableList<TimeRange> availableMeetings = getAvailableTimeRange(occupiedTimeRangeWithOptional, durationInMinutes);
 
     // Has time slots that satisfy both mandatory and optional attendees.
     if (!availableMeetings.isEmpty()) {
-      return ImmutableList.copyOf(availableMeetings);
+      return availableMeetings;
     }
 
     // No mandatory attendees.
@@ -64,7 +66,7 @@ public final class FindMeetingQuery {
       return ImmutableList.of();
     }
 
-    return ImmutableList.copyOf(getAvailableTimeRange(occupiedTimeRange, durationInMinutes));
+    return getAvailableTimeRange(occupiedTimeRange, durationInMinutes);
   }
 
   private boolean isValidParams(Collection<Event> events, long duration) {
@@ -77,26 +79,30 @@ public final class FindMeetingQuery {
     return true;
   }
 
-  private List<TimeRange> getOccupiedTimeRange(Set<String> attendees, Collection<Event> events) {
+  private ImmutableList<TimeRange> getOccupiedTimeRange(Set<String> attendees, Collection<Event> events) {
     List<TimeRange> occupiedTimeRange = new ArrayList<>();
     for (Event event: events) {
-      if (Utils.hasIntersection(event.getAttendees(), attendees)) {
+      if (hasIntersection(event.getAttendees(), attendees)) {
         occupiedTimeRange.add(event.getWhen());
       }
     }
-    return occupiedTimeRange;
+    return ImmutableList.copyOf(occupiedTimeRange);
   }
 
-  private List<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
+  private boolean hasIntersection(Set<String> eventAttendees, Set<String> requestAttendees) {
+    return !Collections.disjoint(eventAttendees, requestAttendees);
+  }
+
+  private ImmutableList<TimeRange> getAvailableTimeRange(ImmutableList<TimeRange> occupiedTimeRange, long duration) {
     // Assumes 0 < duration <= WHOLE_DAY
 
     List<TimeRange> availableMeetings = new ArrayList<>();
 
     if (occupiedTimeRange.isEmpty()) {
-      return Arrays.asList(TimeRange.WHOLE_DAY);
+      return ImmutableList.of(TimeRange.WHOLE_DAY);
     }
 
-    List<TimeRange> mergedTimeRanges = mergeTimeRange(occupiedTimeRange);
+    ImmutableList<TimeRange> mergedTimeRanges = mergeTimeRange(occupiedTimeRange);
 
     int start = TimeRange.START_OF_DAY;
 
@@ -118,14 +124,14 @@ public final class FindMeetingQuery {
       availableMeetings.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, /* inclusive= */true));
     }
 
-    return availableMeetings;
+    return ImmutableList.copyOf(availableMeetings);
   }
 
-  private List<TimeRange> mergeTimeRange(List<TimeRange> timeRanges) {
+  private ImmutableList<TimeRange> mergeTimeRange(ImmutableList<TimeRange> timeRanges) {
     List<TimeRange> mergedTimeRanges = new ArrayList<>();
 
     if (timeRanges.isEmpty()) {
-      return mergedTimeRanges;
+      return ImmutableList.copyOf(mergedTimeRanges);
     }
 
     Collections.sort(timeRanges, TimeRange.ORDER_BY_START);
@@ -150,6 +156,6 @@ public final class FindMeetingQuery {
       }
     }
 
-    return mergedTimeRanges;
+    return ImmutableList.copyOf(mergedTimeRanges);
   }
 }
