@@ -134,10 +134,10 @@ public final class FindMeetingQuery {
       return ImmutableList.copyOf(mergedTimeRanges);
     }
 
-    Collections.sort(timeRanges, TimeRange.ORDER_BY_START);
+    ImmutableList<TimeRange> sortedTimeRanges = ImmutableList.sortedCopyOf(TimeRange.ORDER_BY_START, timeRanges);
 
     TimeRange last = null;
-    for (TimeRange timeRange: timeRanges) {
+    for (TimeRange timeRange: sortedTimeRanges) {
       // The first TimeRange or no overlapping.
       if (last == null || !timeRange.overlaps(last)) {
         mergedTimeRanges.add(timeRange);
