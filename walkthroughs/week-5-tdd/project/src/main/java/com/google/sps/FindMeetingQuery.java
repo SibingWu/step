@@ -16,7 +16,6 @@ package com.google.sps;
 
 import com.google.appengine.repackaged.com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -80,23 +79,19 @@ public final class FindMeetingQuery {
   }
 
   private ImmutableList<TimeRange> getOccupiedTimeRange(Set<String> attendees, Collection<Event> events) {
-    List<TimeRange> occupiedTimeRange = new ArrayList<>();
+    ImmutableList.Builder<TimeRange> occupiedTimeRange = ImmutableList.builder();
     for (Event event: events) {
       if (hasIntersection(event.getAttendees(), attendees)) {
         occupiedTimeRange.add(event.getWhen());
       }
     }
-    return ImmutableList.copyOf(occupiedTimeRange);
+    return occupiedTimeRange.build();
   }
 
-  private boolean hasIntersection(Set<String> eventAttendees, Set<String> requestAttendees) {
-    return !Collections.disjoint(eventAttendees, requestAttendees);
-  }
-
-  private ImmutableList<TimeRange> getAvailableTimeRange(ImmutableList<TimeRange> occupiedTimeRange, long duration) {
+  private ImmutableList<TimeRange> getAvailableTimeRange(List<TimeRange> occupiedTimeRange, long duration) {
     // Assumes 0 < duration <= WHOLE_DAY
 
-    List<TimeRange> availableMeetings = new ArrayList<>();
+    ImmutableList.Builder<TimeRange> availableMeetings = ImmutableList.builder();
 
     if (occupiedTimeRange.isEmpty()) {
       return ImmutableList.of(TimeRange.WHOLE_DAY);
@@ -124,15 +119,15 @@ public final class FindMeetingQuery {
       availableMeetings.add(TimeRange.fromStartEnd(start, TimeRange.END_OF_DAY, /* inclusive= */true));
     }
 
-    return ImmutableList.copyOf(availableMeetings);
+    return availableMeetings.build();
   }
 
-  private ImmutableList<TimeRange> mergeTimeRange(ImmutableList<TimeRange> timeRanges) {
-    List<TimeRange> mergedTimeRanges = new ArrayList<>();
-
+  private ImmutableList<TimeRange> mergeTimeRange(List<TimeRange> timeRanges) {
     if (timeRanges.isEmpty()) {
-      return ImmutableList.copyOf(mergedTimeRanges);
+      return ImmutableList.of();
     }
+
+    List<TimeRange> mergedTimeRanges = new ArrayList<>();
 
     ImmutableList<TimeRange> sortedTimeRanges = ImmutableList.sortedCopyOf(TimeRange.ORDER_BY_START, timeRanges);
 
@@ -143,13 +138,13 @@ public final class FindMeetingQuery {
         mergedTimeRanges.add(timeRange);
         last = timeRange;
       } else {
-        TimeRange mergedTimeRange;
         if (last.contains(timeRange)) {
           continue;
         }
 
-        mergedTimeRange = TimeRange.fromStartEnd(last.start(), timeRange.end(), /* inclusive= */false);
+        TimeRange mergedTimeRange = TimeRange.fromStartEnd(last.start(), timeRange.end(), /* inclusive= */false);
 
+        // Replaces the last time range with the newly merged time range.
         mergedTimeRanges.remove(mergedTimeRanges.size() - 1);
         mergedTimeRanges.add(mergedTimeRange);
         last = mergedTimeRange;
@@ -157,5 +152,9 @@ public final class FindMeetingQuery {
     }
 
     return ImmutableList.copyOf(mergedTimeRanges);
+  }
+
+  private static boolean hasIntersection(Set<String> eventAttendees, Set<String> requestAttendees) {
+    return !Collections.disjoint(eventAttendees, requestAttendees);
   }
 }
