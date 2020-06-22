@@ -28,6 +28,9 @@ public final class Event {
   private final TimeRange when;
   private final Set<String> attendees = new HashSet<>();
 
+  // Assuming all events end before EOD.
+  // TODO: add test case for not accepting events crossing EOD.
+
   /**
    * Creates a new event.
    *
